@@ -1,14 +1,16 @@
 # Seen im Klimawandel – Salzburg & Oberösterreich
 
-[![CI](https://github.com/plfpffh/SED502_ESA2/actions/workflows/ci.yml/badge.svg)](https://github.com/plfpffh/SED502_ESA2/actions/workflows/ci.yml)
+[![CI](https://github.com/plfpffh/SED502_ESA3/actions/workflows/ci.yml/badge.svg)](https://github.com/plfpffh/SED502_ESA3/actions/workflows/ci.yml)
 
-Gruppenprojekt für die Einsendeaufgabe 2 im Modul **SED502 Front-End Development** (Ferdinand Porsche FernFH, WS 2026/27) von **plfpffh** und **cchhrriiss**.
+Gruppenprojekt für die Einsendeaufgabe 3 (Abschlussprojekt) im Modul **SED502 Front-End Development** (Ferdinand Porsche FernFH, WS 2026/27) von **plfpffh** und **cchhrriiss**.
 
 Die App zeigt für 14 Seen im Salzburger Seenland und im Salzkammergut die **aktuelle Wassertemperatur** und ordnet sie mit **Klimadaten seit dem Winter 1950/51** ein. Eine **KI** (Google Gemini) erklärt die Zahlen und empfiehlt, welcher See sich für einen Ausflug in den nächsten sieben Tagen eignet.
 
 **Zielgruppe:** Badegäste und Eissport-Interessierte in Salzburg und Oberösterreich sowie alle, die sehen wollen, wie sich der Klimawandel an den Seen der Region zeigt.
 
-**Ausgangsbasis:** Die statische Seite aus der Einzelarbeit ESA 1 (<https://github.com/plfpffh/SED502_ESA1>). Stammdaten, Datenmodell und Filterlogik wurden zuerst unverändert übernommen (Commit `80e5646`) und danach in eigenen Commits erweitert. So bleibt in der Historie nachvollziehbar, was aus ESA 1 stammt und was neu ist.
+**Ausgangsbasis ESA 3:** Die App aus der Gruppenarbeit ESA 2 (<https://github.com/plfpffh/SED502_ESA2>) mit ihrer vollständigen Commit-Historie. Der Stand der ESA-2-Abgabe ist mit dem Tag [`esa2-abgabe`](https://github.com/plfpffh/SED502_ESA3/tree/esa2-abgabe) markiert. Alle Änderungen aus ESA 3 zeigt der [Vergleich `esa2-abgabe...main`](https://github.com/plfpffh/SED502_ESA3/compare/esa2-abgabe...main).
+
+**Ausgangsbasis ESA 2:** Die statische Seite aus der Einzelarbeit ESA 1 (<https://github.com/plfpffh/SED502_ESA1>). Stammdaten, Datenmodell und Filterlogik wurden zuerst unverändert übernommen (Commit `80e5646`) und danach in eigenen Commits erweitert. So bleibt in der Historie nachvollziehbar, was aus ESA 1 stammt und was neu ist.
 
 ## Was die App kann
 
@@ -184,4 +186,4 @@ Open-Meteo rechnet lange Zeiträume und mehrere Variablen als mehrere Anfragen a
 
 ### Ausblick auf ESA 3
 
-ESA 3 baut auf dieser App auf. Geplant sind das Deployment auf Vercel mit dem API-Key als Umgebungsvariable (`vercel.json` mit SPA-Rewrite liegt schon bereit), Responsive Design ab 320 px, Barrierefreiheit nach WCAG 2.2 mit Lighthouse-Messung und Code Splitting für mindestens zwei Seiten. Optional kommt eine Landkarte der Seen dazu.
+ESA 3 baut auf dieser App auf. Geplant sind das Deployment auf Vercel mit dem API-Key als Umgebungsvariable (`vercel.json` mit SPA-Rewrite liegt schon bereit), Responsive Design ab 320 px, Barrierefreiheit nach WCAG 2.2 mit Lighthouse-Messung und Code Splitting für mindestens zwei Seiten. Auf die zunächst als Option genannte Landkarte der Seen verzichten wir: Sie kostet Performance und bräuchte eine eigene Tastaturbedienung, die barrierefreie Seenliste zeigt dieselben Informationen.
