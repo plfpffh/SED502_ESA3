@@ -1,7 +1,7 @@
 # ESA 3 – Planung „Seen im Klimawandel“ (Abschlussprojekt)
 
 Gruppenarbeit SED502 Front-End Development · dieselben 2 Personen wie ESA 2 · 50 Punkte
-Abgabe **Sa, 16.01.2027, 23:59** im Online-Campus · Repository <https://github.com/plfpffh/SED502_ESA3>
+Abgabe **Sa, 16.01.2027, 23:59** im Online-Campus · Repository <https://github.com/plfpffh/SED502_ESA3> · Live-URL <https://sed-502-esa-3-kohl.vercel.app/>
 
 | Rolle | GitHub | Name | Schwerpunkt |
 |---|---|---|---|
@@ -74,6 +74,10 @@ Eine E-Mail bis 02.01.2027 ist nur bei einem Neustart oder einer geänderten Gru
 | M07 Üb. 1.1 | Core Web Vitals (LCP, INP, CLS) dokumentieren | in `doc/lighthouse.md` → **B** |
 | M05 S.20 | README: welche Daten an die API gehen, was mit ihnen passiert | bei ESA 2 vorhanden; ergänzen: Der Tageszähler speichert keine IP und keine personenbezogenen Daten → **A** |
 | M01 S.10 | „Kein Code wird committet, den man nicht vollständig erklären kann“ | gilt besonders für KI-generierten Code (Abschnitt 3, Git-Workflow) |
+| M01 1.2 | Node.js „stets in der LTS-Version“ | Node 26 ist seit 28.10.2026 Active LTS, Node 24 seit 20.10.2026 nur noch Maintenance LTS (Release-Plan nodejs/Release, abgerufen 20.11.2026). Entscheidung: Node 26 lokal, in der CI und auf Vercel (Abschnitt 4, Deployment) → **A** |
+| M04 4.1 | „Den Seitentitel im Browser-Tab ändern“ ist ein typischer Seiteneffekt → `useEffect` mit Cleanup | so umgesetzt in `useSeitentitel` → **A** |
+| M04 Üb. 9.1 | kein TypeScript-Fehler **und keine ESLint-Warnungen** | `npm run lint` ohne Warnung, Checkliste Abschnitt 9 |
+| M05 6.4, Üb. 6.1 | Kosten-Kontrolle: Rate Limits setzen; Sperre ab 10 Anfragen | fachliche Grundlage für das KI-Kontingent (Konzept in Abschnitt 4), in der README unter „Sicherheit“ nennen → **A** |
 | M08 3.2 | Komponenten klein (50–100 Zeilen), keine Dopplungen, Cleanup in `useEffect` | beim Umbau beibehalten |
 | M08 3.3 | Loading-Indikatoren, verständliche Fehler, „Formulare mit Validierung und Feedback“ | siehe oben |
 | M08 3.4 | Nur halbe Punkte bei „Build-Warnungen“, das gilt auch für das **Vercel-Build-Log** | Vercel-Log prüfen (Abschnitt 5) |
@@ -94,6 +98,8 @@ Eine E-Mail bis 02.01.2027 ist nur bei einem Neustart oder einer geänderten Gru
 
 **Tailwind (M06 4.3)** setzen wir bewusst nicht ein. Die App hat seit ESA 2 eine eigene `index.css` mit CSS-Variablen und Hell-/Dunkel-Theme (ebenfalls M06, Abschnitt 4.2). Eine Umstellung brächte keinen Punkt, aber viel Risiko. Diese Entscheidung kommt in die README unter „Bewusste Entscheidungen“.
 
+**Dateien im Projektstamm bleiben, wo sie sind** (Entscheidung 20.11.2026). `vercel.json` und `api/` liest Vercel nur im Projektstamm (M07 3.4). `package.json`, `index.html`, `vite.config.ts`, `tsconfig*.json`, `eslint.config.js` und `.env.example` erwarten npm, Vite, TypeScript und ESLint dort. Die Struktur entspricht M04 1.5 und der Vite-Vorlage. `vite-plugin-api.ts` ließe sich verschieben, bleibt aber, weil das vier Stellen im bewerteten ESA-2-Code ändern würde und keinen Mehrwert bringt.
+
 ## 2. Ausgangslage aus ESA 2 (geprüft am 05.11.2026)
 
 | Bereich | Stand | Aufgabe in ESA 3 |
@@ -106,7 +112,7 @@ Eine E-Mail bis 02.01.2027 ist nur bei einem Neustart oder einer geänderten Gru
 | Responsive | Grids teils flexibel, **keine** Breakpoints, Navigation nicht für Mobil gebaut | Abschnitt 4 |
 | Barrierefreiheit | `lang="de"`, Landmarks, `aria-label` an der Navigation, `:focus-visible`, `role="status"`/`alert`, Diagramm mit Tabelle, `prefers-reduced-motion` | Skip-Link, Seitentitel, Kontrast, Formularfehler, Audit |
 | Deployment | `vercel.json` mit SPA-Rewrite (ohne `/api/`), `api/`-Funktionen im Vercel-Format, `.env.example` | auf Vercel einrichten → **A** |
-| CI | GitHub Actions `pruefen`: `npm ci`, Lint, Test, Build (Node 24) | Pflicht-Check im Ruleset |
+| CI | GitHub Actions `pruefen`: `npm ci`, Lint, Test, Build (Node 24, in ESA 3 auf Node 26 umgestellt) | Pflicht-Check im Ruleset |
 | README | alle ESA-2-Abschnitte, CI-Badge zeigt noch auf ESA2-Repo | Badge, Titel und ESA-3-Abschnitte |
 
 ## 3. Repository und Git-Historie
@@ -126,7 +132,7 @@ Begründung:
 3. ✅ **A:** annotierter Tag `esa2-abgabe` auf `18527c7` gesetzt und gepusht. Er trennt ESA 2 und ESA 3. Die ESA-3-Commits zählen ab hier: `git shortlog -sn esa2-abgabe..main`.
 4. ✅ **A:** Person B als Collaborator eingeladen.
 5. ✅ **A:** Rulesets angelegt **nach** dem ersten Push (sonst blockiert es den Push selbst), wie in ESA 2. Details unten.
-6. ⬜ **A:** erster Pull Request `feature/a-esa3-planung`:
+6. ✅ **A:** erster Pull Request `feature/a-esa3-planung` (PR #1, gemergt am 07.11.2026):
    - diese Planung
    - `package.json` und `package-lock.json`: `"name": "esa3"`
    - README: CI-Badge und erste Zeile auf ESA 3, Absatz „Ausgangsbasis ESA 3“ mit Tag und Vergleichslink, Ausblick ohne Landkarte
@@ -157,7 +163,9 @@ Tags verlangt weder die Angabe noch ein Kompendium. Der Tag `esa2-abgabe` hat nu
 - Jede Person committet von ihrem eigenen Konto (noreply-Adresse).
 - Jede Person muss ihren Code vollständig erklären können, auch Teile, die mit KI-Unterstützung entstanden sind (M01).
 - Jeder PR wird von der anderen Person reviewt.
-- Vercel hängt an jeden PR eine Preview-URL. Der Review prüft die Änderung dort auch bei 320 px.
+- Vercel hängt an jeden PR eine Preview-URL. Sie ist geschützt und nur mit Vercel-Login von A sichtbar (siehe Abschnitt 4, Deployment). Deshalb:
+  - **A** prüft die Preview jedes PR (auch der PRs von B) auf Deployment-Themen: Build-Log, Routen, `/api/*`, Region.
+  - **Der Review** (andere Person) prüft den Code auf GitHub und die Darstellung lokal: Branch auschecken, `npm run dev`, DevTools auf 320 px.
 
 ## 4. Aufgabenverteilung
 
@@ -190,13 +198,16 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 **Deployment auf Vercel (Woche 1, damit B auf der Live-URL messen kann)**
 - Vercel-Projekt unter dem eigenen Konto (Hobby) mit dem GitHub-Repository verbinden, Preset Vite.
 - Im Hobby-Plan gibt es keine Teammitglieder. B sieht die Deployments über die Vercel-Kommentare und Status-Checks im PR. Das reicht, weil das Repository öffentlich ist.
-- *Settings → Deployment Protection → Vercel Authentication* für Previews **ausschalten**. Sonst kann B die Preview-URLs nicht öffnen, weil sie standardmäßig nur mit Vercel-Login des Projekts sichtbar sind.
-- `GEMINI_API_KEY` (und optional `GEMINI_MODEL`) unter *Settings → Environment Variables* für **Production und Preview** eintragen. Ohne `VITE_`-Präfix, wie in ESA 2 begründet.
-- Später, mit dem KI-Kontingent (Woche 3), ebenso:
+- *Settings → Deployment Protection → Vercel Authentication* bleibt **eingeschaltet** (Entscheidung 20.11.2026, Sicherheit). Previews zeigen unfertigen Stand, und sobald der Gemini-Key auch für Preview gesetzt ist, wäre jede offene Preview ein weiterer öffentlicher Zugang zur KI. Folge: B kann Previews nicht öffnen, der Review läuft lokal (Abschnitt 3, Git-Workflow). Öffentlich ist nur die Production-URL.
+- `GEMINI_API_KEY` (und optional `GEMINI_MODEL`) **erst eintragen, wenn das KI-Kontingent im Code ist** (Woche 3). Vorher könnte jede Person über die öffentliche URL unser Gemini-Kontingent verbrauchen. Bis dahin meldet die App „Die KI ist nicht eingerichtet“ (Entscheidung 20.11.2026). Dann unter *Settings → Environment Variables* für **Production und Preview**, ohne `VITE_`-Präfix, wie in ESA 2 begründet.
+- Mit dem KI-Kontingent ebenso:
   - `KI_ZUGANGSCODE_SHA512` und optional `KI_TAGESLIMIT` eintragen
   - Upstash Redis über *Storage / Marketplace* verbinden; die Integration setzt die Redis-Variablen selbst. M08 bewertet „Umgebungsvariablen korrekt“.
 - **Region der Functions:** `vercel.json` → `"regions": ["fra1"]`. Der Standard ist die US-Ostküste. Frankfurt ist näher an den Landesquellen und verringert das Risiko, dass sie Anfragen aus dem Ausland sperren.
-- **Node-Version:** `engines` von `">=22.18"` auf `"24.x"` ändern. Bei `>=` schreibt Vercel eine Warnung ins Build-Log, und M08 3.4 gibt bei Build-Warnungen nur halbe Punkte. CI läuft bereits mit Node 24.
+- **Node-Version:** `engines` von `">=22.18"` auf eine feste Hauptversion ändern. Bei `>=` schreibt Vercel eine Warnung ins Build-Log, und M08 3.4 gibt bei Build-Warnungen nur halbe Punkte.
+  - M01 verlangt die LTS-Version. Seit 28.10.2026 ist das **Node 26** (Active LTS), Node 24 ist nur noch Maintenance LTS. A entwickelt lokal mit Node 26.
+  - ✅ **Entscheidung (20.11.2026): Node 26.** Vercel bietet `26.x` an und hat es beim Anlegen des Projekts gewählt. `engines` `"26.x"`, CI auf Node 26, Vercel auf 26.x: überall dieselbe LTS-Version.
+  - Begründung in der README unter „Bewusste Entscheidungen“.
 - Auf der Live-URL testen:
   - `/seen/attersee` direkt aufrufen und neu laden: kein 404
   - `/xyz` zeigt die eigene 404-Seite
@@ -209,7 +220,8 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 - Im Build prüfen, ob pro Seite ein eigener Chunk entsteht. Hauptpaket vorher/nachher in `doc/lighthouse.md` notieren.
 
 **Custom Hook in mehr als einer Komponente**
-- Neuer Hook `src/hooks/useSeitentitel.ts`: setzt `document.title` („Attersee – Seen im Klimawandel“).
+- Neuer Hook `src/hooks/useSeitentitel.ts`: setzt `document.title` („Attersee – Seen im Klimawandel“) in `useEffect` und setzt im Cleanup den Standardtitel aus `index.html` (M04 4.1 nennt den Seitentitel als typischen Seiteneffekt). Bewusst nicht „den vorigen Titel“: Sonst stünde beim Seitenwechsel, während die nächste Seite per `React.lazy` lädt, kurz der Titel einer falschen Seite im Tab (Entscheidung 20.11.2026).
+- Die Titellogik liegt als reine Funktion in `utils/seitentitel.ts` (Drei-Schichten-Modell, ohne Browser testbar), der Hook ist nur die Brücke zu `document.title`. Auf der Detailseite steht der Aufruf in `SeeDetailInhalt`, damit die eingebettete 404-Seite bei unbekannter Adresse ihren eigenen Titel behält.
 - Jede Seite ruft ihn auf, also mind. 5 Komponenten. Das erfüllt die Anforderung eindeutig und verbessert zugleich die Barrierefreiheit (WCAG 2.4.2 *Page Titled*). Bei einer SPA ändert sich der Titel sonst nie.
 - Mit Test. In der README unter „Technische Details“ nennen, zusammen mit `useAI` und `useSeeDaten`.
 
@@ -309,6 +321,8 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 - **AI-Doku:** Jede Person ergänzt ihre Zeilen in „Einsatz von AI-Tools“ wie in ESA 2 (Tool mit Zeitraum, wofür, Ergebnis und eigene Prüfung). Dazu kommen konkrete Fälle von übernommenem, verworfenem oder angepasstem KI-Output. Am einfachsten notiert man sie gleich während der Arbeit.
 
 ### Konzept: KI-Kontingent und Zugangscode
+
+**Grundlage:** M05 6.4 verlangt Kosten-Kontrolle über Rate Limits, M05 Üb. 6.1 eine Sperre ab 10 Anfragen.
 
 **Problem:** Die Live-App ist öffentlich. Jede Person, auch ein Skript, kann über `/api/ki` unser Gemini-Kontingent aufbrauchen. Dann funktioniert das KI-Feature ausgerechnet bei der Bewertung nicht mehr.
 
@@ -423,7 +437,7 @@ Eine Seite gilt als fertig, wenn:
 - [ ] fehlende Messwerte als Text „Wert aktuell nicht vorhanden“ erscheinen, nicht nur über Farbe (Regel aus ESA 2)
 - [ ] die Seite per `React.lazy()` geladen wird
 - [ ] axe/WAVE ohne Fehler durchläuft
-- [ ] der PR-Review auf der Vercel-Preview-URL gemacht wurde
+- [ ] der PR-Review lokal mit `npm run dev` bei 320 px gemacht wurde und A die Vercel-Preview geprüft hat
 
 ## 6. Lighthouse messen
 
@@ -468,7 +482,8 @@ Meilensteine laut Kompendium M08: Grundstruktur 19.12., Kern 02.01., Feinschliff
 - [ ] Live-URL erreichbar. **Am Abgabetag im Inkognito-Fenster** prüfen, auch Unterseiten direkt aufrufen und neu laden.
 - [ ] API-Key nur in den Vercel-Umgebungsvariablen, nicht im Repository (`git log --all -- .env` ist leer)
 - [ ] `npm run build` lokal **und** im Vercel-Log ohne Fehler und Warnungen; CI grün
-- [ ] VS Code: Ansicht *Probleme* leer (TypeScript und ESLint, auch `tests/` und `api/`)
+- [ ] VS Code: Ansicht *Probleme* leer (TypeScript und ESLint, auch `tests/` und `api/`); `npm run lint` ohne Fehler **und ohne Warnungen** (M04 Üb. 9.1)
+- [ ] Node-Version: `engines`, CI und Vercel einheitlich auf einer LTS-Version, Entscheidung in der README begründet (M01 1.2)
 - [ ] `.env.example` enthält alle Variablen; `.env` steht in `.gitignore`
 - [ ] In Vercel für Production **und** Preview gesetzt: `GEMINI_API_KEY`, `KI_ZUGANGSCODE_SHA512`, optional `KI_TAGESLIMIT`; Redis-Zugangsdaten über die Upstash-Integration
 - [ ] Mind. zwei Seiten per `React.lazy()`; eigener Chunk je Seite im Build
@@ -478,7 +493,7 @@ Meilensteine laut Kompendium M08: Grundstruktur 19.12., Kern 02.01., Feinschliff
   - [ ] nach 10 Anfragen erscheint das Freischalt-Formular
   - [ ] der Code aus dem Abgabetext funktioniert
   - [ ] ein falscher Code wird abgelehnt
-  - [ ] Redis-Ausfall auf einer Preview geprobt (z. B. falsche Redis-URL): ohne Code gesperrt, mit Code nutzbar
+  - [ ] Redis-Ausfall auf einer Preview geprobt (A, eingeloggt; z. B. falsche Redis-URL): ohne Code gesperrt, mit Code nutzbar
 - [ ] Im Repository und in Vercel steht nur der SHA-512-Hash, nicht der Zugangscode
 - [ ] CI: Lizenzprüfung und `npm audit` grün, SBOM als Artefakt vorhanden
 - [ ] Seite `/lizenzen` vollständig: Drittsoftware, Datenlizenzen mit Namensnennung, KI-Anbieter, Nutzungsrechte
