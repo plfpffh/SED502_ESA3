@@ -1,5 +1,6 @@
 # CI nach Kompendium Modul 07, Abschnitt 3.2: Lint, Tests und Build bei jedem Push und Pull Request auf main.
-# Abweichung: Node 24 statt 20, weil die Tests (node --test *.ts) TypeScript direkt ausführen, das kann Node erst ab 22.18.
+# Abweichung: Node 26 statt 20. Node 26 ist die aktuelle LTS-Version (Modul 01, Abschnitt 1.2) und dieselbe wie auf Vercel
+# und in package.json (engines). Außerdem führen die Tests (node --test *.ts) TypeScript direkt aus, das kann Node erst ab 22.18.
 name: CI
 
 on:
@@ -23,7 +24,7 @@ jobs:
       - name: Node.js einrichten
         uses: actions/setup-node@v5
         with:
-          node-version: '24'
+          node-version: '26'
           cache: 'npm'
 
       - name: Abhängigkeiten installieren
