@@ -11,6 +11,7 @@
 import { useState } from 'react';
 import { useBeraterAnfrage } from '../hooks/useBeraterAnfrage';
 import { useBeraterDaten } from '../hooks/useBeraterDaten';
+import { useSeitentitel } from '../hooks/useSeitentitel';
 import BeraterDatengrundlage from '../komponenten/BeraterDatengrundlage';
 import BeraterEmpfehlung from '../komponenten/BeraterEmpfehlung';
 import BeraterFormular from '../komponenten/BeraterFormular';
@@ -20,6 +21,7 @@ import { EIS_PFLICHTSATZ } from '../utils/kiRegeln';
 import { prognoseTage } from '../utils/prognose';
 
 export default function KiBerater(): React.JSX.Element {
+  useSeitentitel('KI-Berater');
   const daten = useBeraterDaten();
   const ki = useBeraterAnfrage(daten);
   const tage = prognoseTage();

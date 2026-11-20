@@ -15,9 +15,11 @@ import SeeKarte from '../komponenten/SeeKarte';
 import SeenFilter from '../komponenten/SeenFilter';
 import { useSeenFilter } from '../context/SeenFilterContext';
 import { useSeenAuswahl } from '../hooks/useSeenAuswahl';
+import { useSeitentitel } from '../hooks/useSeitentitel';
 import { KAELTESERIE_EISLAUFEN } from '../utils/seen';
 
 export default function Seenliste(): React.JSX.Element {
+  useSeitentitel('Seen');
   // aus dem Context, damit der Filter beim Wechsel auf eine Detailseite und zurück erhalten bleibt
   const { filter, setFilter } = useSeenFilter();
   const { auswahl, isLaden, fehler, neuLaden } = useSeenAuswahl(filter);
