@@ -163,7 +163,9 @@ Tags verlangt weder die Angabe noch ein Kompendium. Der Tag `esa2-abgabe` hat nu
 - Jede Person committet von ihrem eigenen Konto (noreply-Adresse).
 - Jede Person muss ihren Code vollständig erklären können, auch Teile, die mit KI-Unterstützung entstanden sind (M01).
 - Jeder PR wird von der anderen Person reviewt.
-- Vercel hängt an jeden PR eine Preview-URL. Der Review prüft die Änderung dort auch bei 320 px.
+- Vercel hängt an jeden PR eine Preview-URL. Sie ist geschützt und nur mit Vercel-Login von A sichtbar (siehe Abschnitt 4, Deployment). Deshalb:
+  - **A** prüft die Preview jedes PR (auch der PRs von B) auf Deployment-Themen: Build-Log, Routen, `/api/*`, Region.
+  - **Der Review** (andere Person) prüft den Code auf GitHub und die Darstellung lokal: Branch auschecken, `npm run dev`, DevTools auf 320 px.
 
 ## 4. Aufgabenverteilung
 
@@ -196,7 +198,7 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 **Deployment auf Vercel (Woche 1, damit B auf der Live-URL messen kann)**
 - Vercel-Projekt unter dem eigenen Konto (Hobby) mit dem GitHub-Repository verbinden, Preset Vite.
 - Im Hobby-Plan gibt es keine Teammitglieder. B sieht die Deployments über die Vercel-Kommentare und Status-Checks im PR. Das reicht, weil das Repository öffentlich ist.
-- *Settings → Deployment Protection → Vercel Authentication* für Previews **ausschalten**. Sonst kann B die Preview-URLs nicht öffnen, weil sie standardmäßig nur mit Vercel-Login des Projekts sichtbar sind.
+- *Settings → Deployment Protection → Vercel Authentication* bleibt **eingeschaltet** (Entscheidung 20.11.2026, Sicherheit). Previews zeigen unfertigen Stand, und sobald der Gemini-Key auch für Preview gesetzt ist, wäre jede offene Preview ein weiterer öffentlicher Zugang zur KI. Folge: B kann Previews nicht öffnen, der Review läuft lokal (Abschnitt 3, Git-Workflow). Öffentlich ist nur die Production-URL.
 - `GEMINI_API_KEY` (und optional `GEMINI_MODEL`) **erst eintragen, wenn das KI-Kontingent im Code ist** (Woche 3). Vorher könnte jede Person über die öffentliche URL unser Gemini-Kontingent verbrauchen. Bis dahin meldet die App „Die KI ist nicht eingerichtet“ (Entscheidung 20.11.2026). Dann unter *Settings → Environment Variables* für **Production und Preview**, ohne `VITE_`-Präfix, wie in ESA 2 begründet.
 - Mit dem KI-Kontingent ebenso:
   - `KI_ZUGANGSCODE_SHA512` und optional `KI_TAGESLIMIT` eintragen
@@ -434,7 +436,7 @@ Eine Seite gilt als fertig, wenn:
 - [ ] fehlende Messwerte als Text „Wert aktuell nicht vorhanden“ erscheinen, nicht nur über Farbe (Regel aus ESA 2)
 - [ ] die Seite per `React.lazy()` geladen wird
 - [ ] axe/WAVE ohne Fehler durchläuft
-- [ ] der PR-Review auf der Vercel-Preview-URL gemacht wurde
+- [ ] der PR-Review lokal mit `npm run dev` bei 320 px gemacht wurde und A die Vercel-Preview geprüft hat
 
 ## 6. Lighthouse messen
 
@@ -490,7 +492,7 @@ Meilensteine laut Kompendium M08: Grundstruktur 19.12., Kern 02.01., Feinschliff
   - [ ] nach 10 Anfragen erscheint das Freischalt-Formular
   - [ ] der Code aus dem Abgabetext funktioniert
   - [ ] ein falscher Code wird abgelehnt
-  - [ ] Redis-Ausfall auf einer Preview geprobt (z. B. falsche Redis-URL): ohne Code gesperrt, mit Code nutzbar
+  - [ ] Redis-Ausfall auf einer Preview geprobt (A, eingeloggt; z. B. falsche Redis-URL): ohne Code gesperrt, mit Code nutzbar
 - [ ] Im Repository und in Vercel steht nur der SHA-512-Hash, nicht der Zugangscode
 - [ ] CI: Lizenzprüfung und `npm audit` grün, SBOM als Artefakt vorhanden
 - [ ] Seite `/lizenzen` vollständig: Drittsoftware, Datenlizenzen mit Namensnennung, KI-Anbieter, Nutzungsrechte
