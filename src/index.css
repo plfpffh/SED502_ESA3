@@ -62,6 +62,24 @@ a {
   outline-offset: 2px;
 }
 
+/* Skip-Link (M06 5.3): unsichtbar, bis er per Tab den Fokus bekommt. Farben aus den Theme-Variablen, damit der
+   Kontrast im hellen und dunklen Farbschema passt. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  padding: 1rem;
+  background: var(--text);
+  color: var(--bg);
+}
+
 .kopfzeile {
   display: flex;
   flex-wrap: wrap;
