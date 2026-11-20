@@ -220,7 +220,8 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 - Im Build prüfen, ob pro Seite ein eigener Chunk entsteht. Hauptpaket vorher/nachher in `doc/lighthouse.md` notieren.
 
 **Custom Hook in mehr als einer Komponente**
-- Neuer Hook `src/hooks/useSeitentitel.ts`: setzt `document.title` („Attersee – Seen im Klimawandel“) in `useEffect` und stellt den vorigen Titel im Cleanup wieder her (M04 4.1 nennt den Seitentitel als typischen Seiteneffekt).
+- Neuer Hook `src/hooks/useSeitentitel.ts`: setzt `document.title` („Attersee – Seen im Klimawandel“) in `useEffect` und setzt im Cleanup den Standardtitel aus `index.html` (M04 4.1 nennt den Seitentitel als typischen Seiteneffekt). Bewusst nicht „den vorigen Titel“: Sonst stünde beim Seitenwechsel, während die nächste Seite per `React.lazy` lädt, kurz der Titel einer falschen Seite im Tab (Entscheidung 20.11.2026).
+- Die Titellogik liegt als reine Funktion in `utils/seitentitel.ts` (Drei-Schichten-Modell, ohne Browser testbar), der Hook ist nur die Brücke zu `document.title`. Auf der Detailseite steht der Aufruf in `SeeDetailInhalt`, damit die eingebettete 404-Seite bei unbekannter Adresse ihren eigenen Titel behält.
 - Jede Seite ruft ihn auf, also mind. 5 Komponenten. Das erfüllt die Anforderung eindeutig und verbessert zugleich die Barrierefreiheit (WCAG 2.4.2 *Page Titled*). Bei einer SPA ändert sich der Titel sonst nie.
 - Mit Test. In der README unter „Technische Details“ nennen, zusammen mit `useAI` und `useSeeDaten`.
 
