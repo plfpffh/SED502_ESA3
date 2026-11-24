@@ -337,6 +337,9 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 | Redis auf Vercel (Produktion und Preview) nicht erreichbar oder nicht konfiguriert | Die KI ist **nur noch mit gültigem Zugangscode** nutzbar. Ohne Code antwortet der Server mit `503` und der Kennung `NUR_MIT_ZUGANGSCODE`, und die App zeigt das Freischalt-Formular mit dem Hinweis, dass die freien Anfragen gerade nicht verfügbar sind (*fail closed* für die freien Anfragen). |
 
 - Ein **Tag** ist ein Kalendertag in Europa/Wien. Gezählt wird jede KI-Anfrage, also jede gestreamte Antwort.
+  - Präzisierung (20.11.2026): Auch Anfragen mit gültigem Code werden gezählt, aber nie blockiert. So zeigt der Zähler den gesamten Verbrauch.
+  - Gezählt wird, sobald eine gültige Anfrage angenommen ist und bevor sie an Gemini geht. Scheitert Gemini, bleibt sie gezählt. Würde erst nach der Antwort gezählt, könnten viele gleichzeitige Anfragen das Limit überholen. Ungültige Anfragen (400, 413) werden nicht gezählt.
+  - Umgesetzt in `api/_kontingent.ts`. Der Unterstrich verhindert, dass Vercel daraus einen eigenen Endpunkt macht. `api/ki.ts` ruft die Prüfung auf und antwortet bei Ablehnung mit `{ fehler, kennung }`. Kennungen: `KONTINGENT_AUFGEBRAUCHT` (429), `CODE_UNGUELTIG` (403), `NUR_MIT_ZUGANGSCODE` (503).
 - Das Limit ist über die Umgebungsvariable `KI_TAGESLIMIT` einstellbar, Standard `10`.
 - Die Prüfung des Zugangscodes hängt nicht von Redis ab. Sie braucht nur die Umgebungsvariable mit dem Hash. Fällt Redis aus, bleibt die KI über den Code erreichbar.
 - Lokal (`npm run dev`, kein `VERCEL_ENV`) gibt es ohne Redis kein Limit, damit niemand beim Entwickeln gesperrt wird.
@@ -345,11 +348,15 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 - Wir verwenden **Upstash Redis** über den Vercel Marketplace (kostenloses Kontingent). Die Zugangsdaten setzt Vercel als Umgebungsvariablen.
 - Schlüssel `ki:<VERCEL_ENV>:<JJJJ-MM-TT>`. Er wird mit `INCR` atomar erhöht, auch wenn mehrere Anfragen gleichzeitig kommen, und läuft nach 48 h ab.
 - Preview und Produktion zählen getrennt.
+- Zugriff über die REST-API von Upstash mit `fetch` (`INCR` und `EXPIRE` in einem Pipeline-Aufruf), bewusst ohne npm-Paket: Es kommt keine Laufzeit-Abhängigkeit dazu, Lizenzbericht und SBOM bleiben unverändert, und Redis lässt sich in den Tests einfach nachbilden.
+- Die Upstash-Integration setzt je nach Version `KV_REST_API_URL`/`KV_REST_API_TOKEN` oder `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN`. Der Code liest beide. ⬜ Beim Einrichten prüfen, welche Vercel setzt, und die andere Variante aus dem Code entfernen.
 
 **Zugangscode**
 - **Erzeugen:** 32 Byte aus einem sicheren Zufallsgenerator, als base64url-Text (43 Zeichen):
   `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`
 - **Speichern:** Auf dem Server liegt nur der **SHA-512-Hash** des Codes, in der Umgebungsvariable `KI_ZUGANGSCODE_SHA512`. Der Code selbst steht weder im Repository noch in Vercel.
+  - Schreibweise des Hashes: **Hex**, also 128 Zeichen `0–9`/`a–f`. Das ist die übliche Ausgabe von SHA-512-Werkzeugen und lässt sich ohne Sonderzeichen kopieren. Ein falsch eingetragener Hash (falsche Länge) fällt als Konfigurationsfehler im Server-Log auf.
+  - Code und Hash erzeugt ein einziger Befehl, er steht in `.env.example`. Der Code erscheint nur in dieser Ausgabe.
 - **Prüfen:** Der Browser schickt den Code über HTTPS im Header `X-KI-Zugangscode`. `api/ki.ts` berechnet SHA-512 und vergleicht mit `crypto.timingSafeEqual`. Die Dauer des Vergleichs verrät so nichts über den Code.
 - **Warum SHA-512 hier reicht:** Ein ungesalzener, schneller Hash ist nur sicher, weil der Code 256 Bit Zufall enthält. Ihn durchzuprobieren ist aussichtslos. Für ein von Menschen gewähltes Passwort wäre ein langsames Verfahren mit Salt nötig (Argon2, scrypt). Das steht so in der README. Aus demselben Grund braucht es keine Sperre nach Fehlversuchen.
 - **Weitergabe:** Der Code steht nur im **Abgabetext im Online-Campus**. Die README sagt, dass er dort zu finden ist. Wer ihn hat, kann ihn nicht weitergeben, ohne dass wir das am Gemini-Verbrauch sehen. Im Notfall erzeugen wir einen neuen Code und tauschen den Hash in Vercel aus.

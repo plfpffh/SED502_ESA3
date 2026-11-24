@@ -3,5 +3,23 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  // Nur für Vercel: Vercel prüft und übersetzt die Functions in api/ mit der nächsten tsconfig.json und folgt den
+  // references nicht. Ohne diese Optionen fehlen dort die Node-Typen (process, Buffer, node:http) und strict, und das
+  // Build-Log enthält Typfehler (M08 3.4: Build ohne Warnungen). Werte wie in tsconfig.node.json.
+  // tsc -b und VS Code verwenden weiterhin tsconfig.app.json und tsconfig.node.json.
+  "compilerOptions": {
+    "target": "es2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    // relativ zu dieser Datei: Vercel übersetzt mit einer temporären tsconfig außerhalb des Projekts, die diese erweitert
+    "typeRoots": ["./node_modules/@types"],
+    "module": "nodenext",
+    "strict": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    // erlaubt Importe mit .ts-Endung (api/ki.ts → ./_kontingent.ts) und schreibt sie beim Übersetzen auf .js um
+    "rewriteRelativeImportExtensions": true
+  }
 }
