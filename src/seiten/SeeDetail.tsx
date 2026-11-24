@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useKlimatrend } from '../hooks/useKlimatrend';
 import { useSeeDetail } from '../hooks/useSeeDetail';
+import { useSeitentitel } from '../hooks/useSeitentitel';
 import { useSeeStammdaten } from '../hooks/useStammdaten';
 import { useAI } from '../hooks/useAI';
 import KiAntwort from '../komponenten/KiAntwort';
@@ -35,6 +36,7 @@ interface SeeDetailInhaltProps {
 
 function SeeDetailInhalt({ see }: SeeDetailInhaltProps): React.JSX.Element {
   const detail = useSeeDetail(see);
+  useSeitentitel(detail.see.name);
   const { kennzahlen, frosttage, isLaden, fehler, neuLaden } = useKlimatrend(see);
   const ki = useAI({ systemPrompt: KI_REGELN, maxNachrichten: 1 });
   const [angefragt, setAngefragt] = useState(false);

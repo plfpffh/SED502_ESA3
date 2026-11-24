@@ -2,18 +2,23 @@
  * App.tsx – Routen der Anwendung
  *
  * Alle Seiten liegen unter einem gemeinsamen Layout (Kopfzeile mit Navigation, Fußzeile).
+ * Code Splitting (Kompendium M07 2.2): Jede Seite wird mit React.lazy erst geladen, wenn sie aufgerufen wird,
+ * und landet im Build in einem eigenen Chunk. Das Suspense mit der Ladeanzeige liegt im Layout um das Outlet,
+ * damit Kopf- und Fußzeile beim Seitenwechsel stehen bleiben.
  *
  * @project  FERNFH SED502 Frontend Development WS 2026/27 ESA 2: Seen im Klimawandel
  * @author   Peter Luckmann
  */
 
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router';
 import Layout from './komponenten/Layout';
-import KiBerater from './seiten/KiBerater';
-import NichtGefunden from './seiten/NichtGefunden';
-import SeeDetail from './seiten/SeeDetail';
-import Seenliste from './seiten/Seenliste';
-import Startseite from './seiten/Startseite';
+
+const Startseite = lazy(() => import('./seiten/Startseite'));
+const Seenliste = lazy(() => import('./seiten/Seenliste'));
+const SeeDetail = lazy(() => import('./seiten/SeeDetail'));
+const KiBerater = lazy(() => import('./seiten/KiBerater'));
+const NichtGefunden = lazy(() => import('./seiten/NichtGefunden'));
 
 export default function App(): React.JSX.Element {
   return (

@@ -9,10 +9,12 @@
 
 import { Link } from 'react-router';
 import { useAnzahlSeen } from '../hooks/useStammdaten';
+import { useSeitentitel } from '../hooks/useSeitentitel';
 import { EIS_PFLICHTSATZ } from '../utils/kiRegeln';
 import { KAELTESERIE_EISLAUFEN } from '../utils/seen';
 
 export default function Startseite(): React.JSX.Element {
+  useSeitentitel();
   const anzahlSeen = useAnzahlSeen();
   return (
     <>

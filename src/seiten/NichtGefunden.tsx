@@ -6,8 +6,10 @@
  */
 
 import { Link } from 'react-router';
+import { useSeitentitel } from '../hooks/useSeitentitel';
 
 export default function NichtGefunden(): React.JSX.Element {
+  useSeitentitel('Seite nicht gefunden');
   return (
     <>
       <h1>Seite nicht gefunden</h1>
