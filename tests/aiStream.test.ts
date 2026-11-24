@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
-import { baueVerlauf, beschreibeKiFehler, chatStream } from '../src/utils/aiStream.ts';
+import { test, type TestContext } from 'node:test';
+import { baueVerlauf, beschreibeKiFehler, chatStream, KiHttpFehler } from '../src/utils/aiStream.ts';
 import { HttpFehler } from '../src/utils/fetchJSON.ts';
+import { hatZugangscodeFormat, KI_ZUGANGSSCHLUESSEL } from '../src/utils/kiZugang.ts';
 import type { Nachricht } from '../src/typen/ai.ts';
 
 const frage: Nachricht = { id: '1', role: 'user', content: 'Wo kann ich baden?' };
@@ -16,10 +17,28 @@ function textAntwort(chunks: Uint8Array[]): Response {
 }
 
 /** Ruft chatStream auf und sammelt, welche Callbacks mit was aufgerufen wurden. */
-async function sammle(signal?: AbortSignal) {
+async function sammle(signal?: AbortSignal, freischaltung?: Parameters<typeof chatStream>[5]) {
   const ergebnis = { text: '', fertig: 0, fehler: null as Error | null };
-  await chatStream([frage], (t) => { ergebnis.text += t; }, () => { ergebnis.fertig++; }, (f) => { ergebnis.fehler = f; }, signal);
+  await chatStream([frage], (t) => { ergebnis.text += t; }, () => { ergebnis.fertig++; }, (f) => { ergebnis.fehler = f; }, signal, freischaltung);
   return ergebnis;
+}
+
+function sitzungsspeicher(t: TestContext): Map<string, string> {
+  const vorher = Object.getOwnPropertyDescriptor(globalThis, 'sessionStorage');
+  const daten = new Map<string, string>();
+  Object.defineProperty(globalThis, 'sessionStorage', {
+    configurable: true,
+    value: {
+      getItem: (key: string) => daten.get(key) ?? null,
+      setItem: (key: string, wert: string) => { daten.set(key, wert); },
+      removeItem: (key: string) => { daten.delete(key); },
+    },
+  });
+  t.after(() => {
+    if (vorher) Object.defineProperty(globalThis, 'sessionStorage', vorher);
+    else Reflect.deleteProperty(globalThis, 'sessionStorage');
+  });
+  return daten;
 }
 
 test('sendet nur role und content an /api/ki und setzt den Text zusammen', async (t) => {
@@ -38,8 +57,64 @@ test('Fehlerantwort von /api/ki: Meldung des Servers wird übernommen', async (t
   t.mock.method(globalThis, 'fetch', async () => Response.json({ fehler: 'Die KI ist gerade ausgelastet.' }, { status: 429 }));
   const ergebnis = await sammle();
   assert.ok(ergebnis.fehler instanceof HttpFehler);
+  assert.ok(ergebnis.fehler instanceof KiHttpFehler && ergebnis.fehler.kennung === null);
   assert.equal(beschreibeKiFehler(ergebnis.fehler), 'Die KI ist gerade ausgelastet.');
   assert.equal(ergebnis.fertig, 0);
+});
+
+test('KI-Kontingent: Nur passende Statuscodes und Kennungen lösen die Freischaltung aus', async (t) => {
+  const faelle = [
+    { status: 429, kennung: 'KONTINGENT_AUFGEBRAUCHT', erwartet: 'KONTINGENT_AUFGEBRAUCHT' },
+    { status: 503, kennung: 'NUR_MIT_ZUGANGSCODE', erwartet: 'NUR_MIT_ZUGANGSCODE' },
+    { status: 403, kennung: 'CODE_UNGUELTIG', erwartet: 'CODE_UNGUELTIG' },
+    { status: 503, kennung: 'CODE_UNGUELTIG', erwartet: null },
+  ];
+  for (const { status, kennung, erwartet } of faelle) {
+    const abruf = t.mock.method(globalThis, 'fetch', async () => Response.json({ fehler: 'Meldung', kennung }, { status }));
+    const { fehler } = await sammle();
+    abruf.mock.restore();
+    assert.ok(fehler instanceof KiHttpFehler);
+    assert.equal(fehler.kennung, erwartet);
+  }
+});
+
+test('Zugangscode: erst nach erfolgreicher Antwort speichern und später ausschließlich im Header senden', async (t) => {
+  const codespeicher = sitzungsspeicher(t);
+  const code = 'A'.repeat(43);
+  let bestaetigt = 0;
+  const abruf = t.mock.method(globalThis, 'fetch', async (_url: string, optionen: RequestInit) => {
+    if (bestaetigt === 0) assert.equal(codespeicher.has(KI_ZUGANGSSCHLUESSEL), false);
+    assert.equal(new Headers(optionen.headers).get('X-KI-Zugangscode'), code);
+    assert.equal(optionen.redirect, 'error');
+    assert.doesNotMatch(String(optionen.body), new RegExp(code));
+    return new Response('Antwort');
+  });
+  const ergebnis = await sammle(undefined, { code, onAkzeptiert: () => { bestaetigt++; } });
+  assert.equal(ergebnis.text, 'Antwort');
+  assert.equal(bestaetigt, 1);
+  assert.equal(codespeicher.get(KI_ZUGANGSSCHLUESSEL), code);
+  assert.equal((await sammle()).text, 'Antwort');
+  assert.equal(abruf.mock.callCount(), 2);
+});
+
+test('Zugangscode: 403 entfernt den zurückgewiesenen Code und speichert einen falschen neuen Code nicht', async (t) => {
+  const codespeicher = sitzungsspeicher(t);
+  const code = 'B'.repeat(43);
+  codespeicher.set(KI_ZUGANGSSCHLUESSEL, code);
+  t.mock.method(globalThis, 'fetch', async () =>
+    Response.json({ fehler: 'Der Zugangscode ist nicht gültig.', kennung: 'CODE_UNGUELTIG' }, { status: 403 }));
+  const { fehler } = await sammle();
+  assert.ok(fehler instanceof KiHttpFehler && fehler.kennung === 'CODE_UNGUELTIG');
+  assert.equal(codespeicher.size, 0);
+  await sammle(undefined, { code, onAkzeptiert: () => assert.fail('Falscher Code wurde akzeptiert') });
+  assert.equal(codespeicher.size, 0);
+});
+
+test('Zugangscode: nur 43 Base64url-Zeichen sind erlaubt', () => {
+  assert.equal(hatZugangscodeFormat('Ab-_' + '9'.repeat(39)), true);
+  for (const code of ['', 'a'.repeat(42), 'a'.repeat(44), 'a'.repeat(42) + '+']) {
+    assert.equal(hatZugangscodeFormat(code), false);
+  }
 });
 
 test('Abbrechen gilt nicht als Fehler', async (t) => {

@@ -11,7 +11,7 @@ import type { See } from './see.ts';
 import type { SeeMessung } from './messung.ts';
 import type { AktuelleKaelteserie, FrosttageWinter, Klimakennzahlen } from './klima.ts';
 import type { Auswahl, Filter, SeeAnsicht } from './ansicht.ts';
-import type { Nachricht } from './ai.ts';
+import type { KiFehler, KiZugangStatus, Nachricht } from './ai.ts';
 import type { SeePrognose } from './prognose.ts';
 
 /**
@@ -89,14 +89,16 @@ export type ChatStream = (
   onFertig: () => void,
   onFehler: (fehler: Error) => void,
   signal?: AbortSignal,
+  freischaltung?: { code: string; onAkzeptiert: () => void },
 ) => Promise<void>;
 
 /** hooks/useAI.ts */
 export type UseAI = (optionen?: { systemPrompt?: string; maxNachrichten?: number }) => {
   nachrichten: Nachricht[];
   isStreaming: boolean;
-  fehler: string | null;
-  sendeNachricht: (inhalt: string) => Promise<void>;
+  fehler: KiFehler | null;
+  zugangStatus: KiZugangStatus;
+  sendeNachricht: (inhalt: string, zugangscode?: string) => Promise<void>;
   abbrechen: () => void;
   zuruecksetzen: () => void;
 };

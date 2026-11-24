@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+import type { KiFehler, KiZugangStatus } from '../typen/ai';
 import { formatierePrognosetag } from '../utils/format';
 import type { BeraterWunsch } from '../utils/kiBerater';
 import KiAntwort from './KiAntwort';
@@ -17,19 +18,21 @@ interface BeraterEmpfehlungProps {
   anfrage: BeraterWunsch;
   text: string;
   isStreaming: boolean;
-  fehler: string | null;
+  fehler: KiFehler | null;
+  zugangStatus: KiZugangStatus;
   abgebrochen: boolean;
   onAbbrechen: () => void;
-  onErneutVersuchen: () => void;
+  onErneutVersuchen: (zugangscode?: string) => void;
 }
 
 export default function BeraterEmpfehlung({
-  anfrage, text, isStreaming, fehler, abgebrochen, onAbbrechen, onErneutVersuchen,
+  anfrage, text, isStreaming, fehler, zugangStatus, abgebrochen, onAbbrechen, onErneutVersuchen,
 }: BeraterEmpfehlungProps): React.JSX.Element {
   const abschnittRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    abschnittRef.current?.focus();
+    const abschnitt = abschnittRef.current;
+    if (abschnitt && !abschnitt.contains(document.activeElement)) abschnitt.focus();
   }, []);
 
   const region = anfrage.bundesland === 'alle' ? 'Salzburg und Oberösterreich' : anfrage.bundesland;
@@ -40,7 +43,7 @@ export default function BeraterEmpfehlung({
         Für {anfrage.aktivitaet === 'baden' ? 'Baden' : 'Eissport'} am {formatierePrognosetag(anfrage.datum)}, Region: {region}.
         Datengrundlage vom Anfragezeitpunkt.
       </p>
-      <KiAntwort text={text} isStreaming={isStreaming} fehler={fehler} abgebrochen={abgebrochen}
+      <KiAntwort text={text} isStreaming={isStreaming} fehler={fehler} zugangStatus={zugangStatus} abgebrochen={abgebrochen}
         onAbbrechen={onAbbrechen} onErneutVersuchen={onErneutVersuchen} />
     </section>
   );

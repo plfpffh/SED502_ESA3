@@ -71,9 +71,10 @@ export default function KiBerater(): React.JSX.Element {
           text={ki.antwort}
           isStreaming={ki.isStreaming}
           fehler={ki.kiFehler}
+          zugangStatus={ki.zugangStatus}
           abgebrochen={ki.abgebrochen}
           onAbbrechen={ki.abbrechen}
-          onErneutVersuchen={() => ki.anfrage && ki.anfordern(ki.anfrage)}
+          onErneutVersuchen={(code) => ki.anfrage && ki.anfordern(ki.anfrage, code)}
         />
       )}
     </div>

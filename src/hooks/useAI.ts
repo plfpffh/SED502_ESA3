@@ -12,23 +12,24 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Nachricht } from '../typen/ai';
+import type { KiFehler, KiZugangStatus, Nachricht } from '../typen/ai';
 import type { UseAI } from '../typen/schnittstellen';
-import { baueVerlauf, beschreibeKiFehler, chatStream } from '../utils/aiStream';
+import { baueVerlauf, beschreibeKiFehler, chatStream, KiHttpFehler } from '../utils/aiStream';
 
 export const useAI: UseAI = (optionen = {}) => {
   const { systemPrompt, maxNachrichten = 20 } = optionen;
 
   const [nachrichten, setNachrichten] = useState<Nachricht[]>([]);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
-  const [fehler, setFehler] = useState<string | null>(null);
+  const [fehler, setFehler] = useState<KiFehler | null>(null);
+  const [zugangStatus, setZugangStatus] = useState<KiZugangStatus>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
   // Seite verlassen: laufende Antwort abbrechen
   useEffect(() => () => controllerRef.current?.abort(), []);
 
   const sendeNachricht = useCallback(
-    async (inhalt: string): Promise<void> => {
+    async (inhalt: string, zugangscode?: string): Promise<void> => {
       if (!inhalt.trim() || isStreaming) return;
 
       const frage: Nachricht = { id: crypto.randomUUID(), role: 'user', content: inhalt.trim() };
@@ -38,6 +39,7 @@ export const useAI: UseAI = (optionen = {}) => {
       // leere Antwort vorbereiten, in die der Stream schreibt
       setNachrichten((alt) => [...alt, frage, { id: antwortId, role: 'assistant', content: '' }]);
       setFehler(null);
+      setZugangStatus(zugangscode ? 'wird-geprueft' : null);
       setIsStreaming(true);
 
       const controller = new AbortController();
@@ -46,6 +48,7 @@ export const useAI: UseAI = (optionen = {}) => {
       const beenden = (): void => {
         setNachrichten((alt) => alt.filter((n) => n.id !== antwortId || n.content !== ''));
         setIsStreaming(false);
+        setZugangStatus((status) => status === 'wird-geprueft' ? null : status);
       };
 
       await chatStream(
@@ -54,10 +57,14 @@ export const useAI: UseAI = (optionen = {}) => {
           setNachrichten((alt) => alt.map((n) => (n.id === antwortId ? { ...n, content: n.content + text } : n))),
         beenden,
         (err) => {
-          setFehler(beschreibeKiFehler(err));
+          setFehler({
+            meldung: beschreibeKiFehler(err),
+            kennung: err instanceof KiHttpFehler ? err.kennung : null,
+          });
           beenden();
         },
         controller.signal,
+        zugangscode ? { code: zugangscode, onAkzeptiert: () => setZugangStatus('akzeptiert') } : undefined,
       );
       if (controllerRef.current === controller) controllerRef.current = null;
     },
@@ -72,8 +79,9 @@ export const useAI: UseAI = (optionen = {}) => {
     controllerRef.current?.abort();
     setNachrichten([]);
     setFehler(null);
+    setZugangStatus(null);
     setIsStreaming(false);
   }, []);
 
-  return { nachrichten, isStreaming, fehler, sendeNachricht, abbrechen, zuruecksetzen };
+  return { nachrichten, isStreaming, fehler, zugangStatus, sendeNachricht, abbrechen, zuruecksetzen };
 };

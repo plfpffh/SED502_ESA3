@@ -8,21 +8,28 @@
  */
 
 import { useState } from 'react';
+import type { KiFehler, KiZugangStatus } from '../typen/ai';
 import FehlerMeldung from './FehlerMeldung';
+import KiFreischaltung from './KiFreischaltung';
 import Ladeanimation from './Ladeanimation';
 
 interface KiAntwortProps {
   text: string;
   isStreaming: boolean;
-  fehler: string | null;
+  fehler: KiFehler | null;
+  zugangStatus: KiZugangStatus;
   abgebrochen?: boolean;
   onAbbrechen: () => void;
-  onErneutVersuchen: () => void;
+  onErneutVersuchen: (zugangscode?: string) => void;
 }
 
-export default function KiAntwort({ text, isStreaming, fehler, abgebrochen = false, onAbbrechen, onErneutVersuchen }: KiAntwortProps): React.JSX.Element {
+export default function KiAntwort({
+  text, isStreaming, fehler, zugangStatus, abgebrochen = false, onAbbrechen, onErneutVersuchen,
+}: KiAntwortProps): React.JSX.Element {
   const [kopierStatus, setKopierStatus] = useState('');
-  const meldung = fehler ?? (!isStreaming && !text.trim() && !abgebrochen
+  const zugangNoetig = Boolean(fehler?.kennung);
+  const codefehler = fehler?.kennung === 'CODE_UNGUELTIG' ? fehler.meldung : undefined;
+  const meldung = codefehler ? null : fehler?.meldung ?? (!isStreaming && !text.trim() && !abgebrochen
     ? 'Die KI hat keine Antwort geliefert. Bitte erneut versuchen.' : null);
 
   const kopieren = async (): Promise<void> => {
@@ -37,12 +44,15 @@ export default function KiAntwort({ text, isStreaming, fehler, abgebrochen = fal
   return (
     <div className="kiantwort">
       <p className="kiantwort__kennzeichnung">KI-generiert</p>
-      {isStreaming && (text
+      {zugangStatus === 'wird-geprueft' && <Ladeanimation text="Zugangscode wird geprüft …" />}
+      {zugangStatus === 'akzeptiert' && <p role="status">Zugangscode akzeptiert.</p>}
+      {isStreaming && zugangStatus !== 'wird-geprueft' && (text
         ? <p role="status">Antwort wird erstellt …</p>
         : <Ladeanimation text="Die KI erstellt eine Einschätzung …" />)}
       <div className="kiantwort__text" aria-live="polite" aria-busy={isStreaming}>{text}</div>
       {abgebrochen && <p role="status">Antwort abgebrochen. Bereits empfangener Text bleibt erhalten.</p>}
-      {meldung && <FehlerMeldung meldung={meldung} onErneutVersuchen={onErneutVersuchen} />}
+      {meldung && <FehlerMeldung meldung={meldung} onErneutVersuchen={zugangNoetig ? undefined : () => onErneutVersuchen()} />}
+      {zugangNoetig && <KiFreischaltung codefehler={codefehler} onFreischalten={onErneutVersuchen} />}
       <div className="kiantwort__aktionen">
         {isStreaming && <button type="button" onClick={onAbbrechen}>Abbrechen</button>}
         {text.trim() !== '' && (
