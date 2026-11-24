@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { Readable } from 'node:stream';
 import { test } from 'node:test';
-import ki, { ABBRUCH_HINWEIS, fehlerVonGemini, leseEreignis, MAX_NACHRICHTEN, MAX_ZEICHEN, pruefeAnfrage, zuGeminiAnfrage } from '../api/ki.ts';
+import ki, { ABBRUCH_HINWEIS, fehlerVonGemini, leseEreignis, leseZugangscode, MAX_NACHRICHTEN, MAX_ZEICHEN, pruefeAnfrage, zuGeminiAnfrage } from '../api/ki.ts';
 
 // Ausschnitt eines SSE-Ereignisses von streamGenerateContent?alt=sse
 const ereignis = (text: string): string =>
@@ -192,4 +193,67 @@ test('kommt gar kein Text (z.B. Tokenlimit beim Nachdenken), gibt es 502 statt e
   await ki(anfrage({ nachrichten: [{ role: 'user', content: 'Hallo' }] }), antwort.response);
   assert.equal(antwort.response.statusCode, 502);
   assert.match(antwort.body(), /keine Antwort/);
+});
+
+// ESA 3: Tageslimit und Zugangscode (Details in tests/kontingent.test.ts)
+
+/** Setzt die Umgebung wie auf Vercel mit Redis und stellt sie nach dem Test wieder her. */
+function wieAufVercel(t: { after: (fn: () => void) => void }, werte: Record<string, string>): void {
+  const vorher = new Map(Object.keys(werte).map((name) => [name, process.env[name]]));
+  Object.assign(process.env, werte);
+  t.after(() => {
+    for (const [name, wert] of vorher) {
+      if (wert === undefined) delete process.env[name];
+      else process.env[name] = wert;
+    }
+  });
+}
+
+const VERCEL_MIT_REDIS = {
+  GEMINI_API_KEY: 'test-key', VERCEL_ENV: 'production', KV_REST_API_URL: 'https://redis.test', KV_REST_API_TOKEN: 'geheim',
+  KI_TAGESLIMIT: '10',
+};
+
+test('Tageslimit erreicht: 429 mit Kennung, Gemini wird nicht aufgerufen', async (t) => {
+  wieAufVercel(t, VERCEL_MIT_REDIS);
+  const abruf = t.mock.method(globalThis, 'fetch', async (url: string) =>
+    url.startsWith('https://redis.test') ? Response.json([{ result: 11 }, { result: 1 }]) : sseAntwort([ereignis('nein')]));
+  const antwort = antwortAufzeichnen();
+  await ki(anfrage({ nachrichten: [{ role: 'user', content: 'Hallo' }] }), antwort.response);
+
+  assert.equal(antwort.response.statusCode, 429);
+  assert.deepEqual(JSON.parse(antwort.body()), {
+    fehler: 'Die freien KI-Anfragen für heute sind aufgebraucht. Mit einem Zugangscode lässt sich die KI weiter nutzen.',
+    kennung: 'KONTINGENT_AUFGEBRAUCHT',
+  });
+  assert.equal(abruf.mock.callCount(), 1); // nur Redis
+});
+
+test('gültiger Zugangscode im Header: Antwort trotz erreichtem Limit', async (t) => {
+  const code = 'test-zugangscode';
+  wieAufVercel(t, { ...VERCEL_MIT_REDIS, KI_ZUGANGSCODE_SHA512: createHash('sha512').update(code).digest('hex') });
+  t.mock.method(globalThis, 'fetch', async (url: string) =>
+    url.startsWith('https://redis.test') ? Response.json([{ result: 99 }, { result: 1 }]) : sseAntwort([ereignis('Ja')]));
+  const antwort = antwortAufzeichnen();
+  const request = { ...anfrage({ nachrichten: [{ role: 'user', content: 'Hallo' }] }), headers: { 'x-ki-zugangscode': code } };
+  await ki(request as unknown as IncomingMessage, antwort.response);
+  assert.equal(antwort.response.statusCode, 200);
+  assert.equal(antwort.body(), 'Ja');
+});
+
+test('ungültige Anfragen werden nicht gezählt', async (t) => {
+  wieAufVercel(t, VERCEL_MIT_REDIS);
+  const abruf = t.mock.method(globalThis, 'fetch', async () => Response.json([{ result: 1 }, { result: 1 }]));
+  const antwort = antwortAufzeichnen();
+  await ki(anfrage({ nachrichten: [] }), antwort.response);
+  assert.equal(antwort.response.statusCode, 400);
+  assert.equal(abruf.mock.callCount(), 0);
+});
+
+test('leseZugangscode: leerer Header gilt als kein Code', () => {
+  const mit = (headers: Record<string, string | string[]>) => ({ headers }) as unknown as IncomingMessage;
+  assert.equal(leseZugangscode(mit({ 'x-ki-zugangscode': '  abc  ' })), 'abc');
+  assert.equal(leseZugangscode(mit({ 'x-ki-zugangscode': '   ' })), null);
+  assert.equal(leseZugangscode(mit({ 'x-ki-zugangscode': ['erster', 'zweiter'] })), 'erster');
+  assert.equal(leseZugangscode(mit({})), null);
 });

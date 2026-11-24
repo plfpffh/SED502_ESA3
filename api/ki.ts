@@ -10,11 +10,14 @@
  *
  * Kosten begrenzen: höchstens MAX_NACHRICHTEN Nachrichten und MAX_ZEICHEN Zeichen pro Anfrage,
  * die Länge der Antwort begrenzt MAX_AUSGABE_TOKENS. Der Browser kann diese Grenzen nicht ändern.
+ * ESA 3: Tageslimit und Zugangscode (api/_kontingent.ts) werden nach der Prüfung des Body und vor dem Aufruf
+ * von Gemini geprüft. Ablehnungen kommen als JSON { fehler, kennung }, damit die App das Freischalt-Formular zeigt.
  *
  * @project  FERNFH SED502 Frontend Development WS 2026/27 ESA 2: Seen im Klimawandel
  * @author   Peter Luckmann
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { entscheide, leseRedisZugang, leseTageslimit, type Kennung } from './_kontingent.ts';
 
 // kostenloses Kontingent laut https://aistudio.google.com/docs/pricing (29.10.2026). Flash Lite erlaubt 500 Anfragen pro Tag,
 // gemini-3.6-flash nur 20 (Limits in AI Studio). gemini-2.5-flash gibt es für neue Keys nicht mehr.
@@ -41,11 +44,20 @@ export interface GeminiAnfrage {
 /** Fehler mit HTTP-Status und einer Meldung, die Nutzer*innen angezeigt werden darf. */
 class AnfrageFehler extends Error {
   readonly status: number;
+  readonly kennung: Kennung | undefined; // nur bei Ablehnungen durch das Kontingent
 
-  constructor(status: number, meldung: string) {
+  constructor(status: number, meldung: string, kennung?: Kennung) {
     super(meldung);
     this.status = status;
+    this.kennung = kennung;
   }
+}
+
+/** Zugangscode aus dem Header X-KI-Zugangscode, null wenn keiner (oder ein leerer) mitgeschickt wurde. */
+export function leseZugangscode(request: IncomingMessage): string | null {
+  const wert = request.headers?.['x-ki-zugangscode'];
+  const code = (Array.isArray(wert) ? wert[0] : wert)?.trim();
+  return code ? code : null;
 }
 
 function istObjekt(wert: unknown): wert is Record<string, unknown> {
@@ -155,10 +167,10 @@ async function leseBody(request: IncomingMessage): Promise<unknown> {
   return JSON.parse(Buffer.concat(teile).toString('utf8'));
 }
 
-function sendeFehler(response: ServerResponse, status: number, meldung: string): void {
+function sendeFehler(response: ServerResponse, status: number, meldung: string, kennung?: Kennung): void {
   response.statusCode = status;
   response.setHeader('Content-Type', 'application/json; charset=utf-8');
-  response.end(JSON.stringify({ fehler: meldung }));
+  response.end(JSON.stringify(kennung ? { fehler: meldung, kennung } : { fehler: meldung }));
 }
 
 /** Hinweis am Ende einer Antwort, die Gemini mittendrin abgebrochen hat, damit sie nicht vollständig wirkt. */
@@ -237,6 +249,19 @@ export default async function ki(request: IncomingMessage, response: ServerRespo
       throw fehler instanceof AnfrageFehler ? fehler : new AnfrageFehler(400, 'Die Anfrage an die KI ist ungültig.');
     }
 
+    // Tageslimit und Zugangscode erst für gültige Anfragen prüfen, damit ungültige nicht mitgezählt werden
+    const entscheidung = await entscheide({
+      zugangscode: leseZugangscode(request),
+      hash: process.env.KI_ZUGANGSCODE_SHA512,
+      tageslimit: leseTageslimit(process.env.KI_TAGESLIMIT),
+      umgebung: process.env.VERCEL_ENV,
+      redis: leseRedisZugang(process.env),
+      jetzt: new Date(),
+    });
+    if (!entscheidung.erlaubt) {
+      throw new AnfrageFehler(entscheidung.status, entscheidung.meldung, entscheidung.kennung);
+    }
+
     const modell = process.env.GEMINI_MODEL || STANDARD_MODELL;
     const antwort = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modell)}:streamGenerateContent?alt=sse`,
@@ -265,7 +290,7 @@ export default async function ki(request: IncomingMessage, response: ServerRespo
       return;
     }
     if (fehler instanceof AnfrageFehler) {
-      sendeFehler(response, fehler.status, fehler.message);
+      sendeFehler(response, fehler.status, fehler.message, fehler.kennung);
       return;
     }
     const timeout = fehler instanceof Error && fehler.name === 'TimeoutError';
