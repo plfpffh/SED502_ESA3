@@ -127,7 +127,14 @@ export default function BeraterFormular({
         <p className="berater__hinweis">Bitte keine persönlichen Daten eingeben.</p>
         {fehler && <p role="alert">{fehler}</p>}
         {hinweise.map((hinweis) => <p key={hinweis}>{hinweis}</p>)}
-        <button type="submit" disabled={!kannAbsenden}>Empfehlung anfordern</button>
+        <button
+          type="submit"
+          disabled={!kannAbsenden}
+          // Wenn die Maustaste gedrückt ist soll der Fokus gehalten werden. Sonst kann eine Fehlermeldung den Button vor dem Klicken verschieben.
+          onMouseDown={(event) => event.preventDefault()}
+        >
+          Empfehlung anfordern
+        </button>
       </fieldset>
     </form>
   );
