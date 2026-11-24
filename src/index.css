@@ -610,6 +610,17 @@ select:disabled {
   resize: vertical;
 }
 
+.berater-form :is(input, textarea, select)[aria-invalid='true'] {
+  border-color: var(--fehler);
+}
+
+.berater__feldfehler {
+  margin: 0;
+  color: var(--fehler);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 .berater__hinweis {
   margin: 0;
   color: var(--text-leise);

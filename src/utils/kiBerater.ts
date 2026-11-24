@@ -24,6 +24,28 @@ export interface BeraterWunsch {
   zusaetzlicheAngaben: string;
 }
 
+export const BERATER_EINGABEFELDER = ['datum', 'wohnort', 'zusaetzlicheAngaben'] as const;
+export type BeraterEingabefeld = typeof BERATER_EINGABEFELDER[number];
+
+export function pruefeBeraterEingaben(
+  wunsch: BeraterWunsch, tage: readonly string[],
+): Partial<Record<BeraterEingabefeld, string>> {
+  const fehler: Partial<Record<BeraterEingabefeld, string>> = {};
+  if (!tage.includes(wunsch.datum)) {
+    fehler.datum = 'Bitte wähle einen Tag innerhalb der nächsten sieben Tage.';
+  }
+  const wohnort = wunsch.wohnort.trim();
+  if (wunsch.wohnort.length > 80) {
+    fehler.wohnort = 'Bitte kürze den Wohnort auf maximal 80 Zeichen.';
+  } else if (wohnort && !/^\p{L}[\p{L}\p{M} .’'-]*$/u.test(wohnort)) {
+    fehler.wohnort = 'Bitte gib nur einen Ortsnamen ein, ohne Straße, Hausnummer oder Postleitzahl.';
+  }
+  if (wunsch.zusaetzlicheAngaben.length > 500) {
+    fehler.zusaetzlicheAngaben = 'Bitte kürze die zusätzlichen Angaben auf maximal 500 Zeichen.';
+  }
+  return fehler;
+}
+
 /**
  * true, wenn im gewählten Bundesland mindestens ein See eine Wassertemperatur oder eine Prognose für den Wunschtag hat.
  * Die Kälteserie wird nicht geprüft: Fehlt sie beim Eissport, ist der See nicht geeignet (null), die KI sagt das offen.
@@ -49,16 +71,15 @@ const KRITERIUM: Record<Aktivitaet, string> = {
 
 /**
  * Prompt für den KI-Berater: Aufgabe, Regeln und die Seedaten der Region als JSON.
- * Wirft einen Error mit verständlicher Meldung, wenn der Tag nicht in den nächsten sieben Tagen liegt oder
- * Wohnort (über 80 Zeichen) bzw. zusätzliche Angaben (über 500 Zeichen) zu lang sind. kaelteserien zählt nur für Eissport.
+ * Prüft die Eingaben vor dem Erstellen des Prompts erneut. kaelteserien zählt nur für Eissport.
  */
 export function baueBeraterAnfrage(
   wunsch: BeraterWunsch, seen: SeeAnsicht[], prognosen: SeePrognose[], heute = new Date(),
   kaelteserien: AktuelleKaelteserie[] = [],
 ): string {
-  if (!prognoseTage(heute).includes(wunsch.datum)) throw new Error('Bitte wähle einen Tag innerhalb der nächsten sieben Tage.');
-  if (wunsch.wohnort.length > 80) throw new Error('Bitte kürze den Wohnort.');
-  if (wunsch.zusaetzlicheAngaben.length > 500) throw new Error('Bitte kürze die zusätzlichen Angaben auf maximal 500 Zeichen.');
+  const fehler = pruefeBeraterEingaben(wunsch, prognoseTage(heute));
+  const ersterFehler = Object.values(fehler)[0];
+  if (ersterFehler) throw new Error(ersterFehler);
   const auswahl = seen.filter((see) => wunsch.bundesland === 'alle' || see.bundeslaender.includes(wunsch.bundesland));
   const daten = auswahl.map((see) => {
     const kaelteserie = kaelteserien.find((k) => k.seeId === see.id)?.tage ?? null;

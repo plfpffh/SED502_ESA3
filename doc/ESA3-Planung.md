@@ -269,7 +269,7 @@ Den Zwischenstand prüfen wir mit `git shortlog -sn esa2-abgabe..main`.
 **Formular mit Validierung (M08-Pflicht)**
 - `BeraterFormular`: Fehler pro Feld anzeigen, nicht nur den Button sperren. Geprüft wird beim Verlassen des Feldes und beim Absenden (M04).
 - Fehlertext per `aria-describedby` am Feld, `aria-invalid="true"`, Fokus beim Absenden auf das erste fehlerhafte Feld.
-- Regeln: Tag in den nächsten 7 Tagen, Wohnort nur ein Ortsname (Buchstaben, Leerzeichen, Bindestrich; max. 80 Zeichen), Zusatz max. 500 Zeichen.
+- Regeln: Tag in den nächsten 7 Tagen, Wohnort nur ein Ortsname (max. 80 Zeichen), Zusatz max. 500 Zeichen. Im Ortsnamen sind Buchstaben, Leerzeichen, Bindestriche, Punkte und Apostrophe erlaubt, etwa für „St. Pölten“.
 - Pflichtfelder sichtbar kennzeichnen. Das Sternchen ist `aria-hidden`, dazu der Text „(Pflichtfeld)“ für Screenreader und `aria-required` (M06 5.3). Optionale Felder bleiben als „optional“ beschriftet.
 - Mit Tests für die Prüffunktion in `utils/`.
 
