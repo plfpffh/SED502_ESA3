@@ -18,6 +18,8 @@ const Startseite = lazy(() => import('./seiten/Startseite'));
 const Seenliste = lazy(() => import('./seiten/Seenliste'));
 const SeeDetail = lazy(() => import('./seiten/SeeDetail'));
 const KiBerater = lazy(() => import('./seiten/KiBerater'));
+const Impressum = lazy(() => import('./seiten/Impressum'));
+const Datenschutz = lazy(() => import('./seiten/Datenschutz'));
 const NichtGefunden = lazy(() => import('./seiten/NichtGefunden'));
 
 export default function App(): React.JSX.Element {
@@ -28,6 +30,8 @@ export default function App(): React.JSX.Element {
         <Route path="seen" element={<Seenliste />} />
         <Route path="seen/:id" element={<SeeDetail />} />
         <Route path="berater" element={<KiBerater />} />
+        <Route path="impressum" element={<Impressum />} />
+        <Route path="datenschutz" element={<Datenschutz />} />
         <Route path="*" element={<NichtGefunden />} />
       </Route>
     </Routes>

@@ -9,6 +9,7 @@
  */
 
 import { useState } from 'react';
+import type { KiFehler, KiZugangStatus } from '../typen/ai';
 import type { BeraterDaten } from './useBeraterDaten';
 import { useAI } from './useAI';
 import { baueBeraterAnfrage, hatBeraterDaten } from '../utils/kiBerater';
@@ -20,10 +21,11 @@ export interface BeraterAnfrage {
   anfrageNummer: number; // zählt hoch, damit die Antwort pro Anfrage neu erscheint
   antwort: string;
   isStreaming: boolean;
-  kiFehler: string | null;
+  kiFehler: KiFehler | null;
+  zugangStatus: KiZugangStatus;
   formularFehler: string | null;
   abgebrochen: boolean;
-  anfordern: (wunsch: BeraterWunsch) => void;
+  anfordern: (wunsch: BeraterWunsch, zugangscode?: string) => void;
   abbrechen: () => void;
 }
 
@@ -34,7 +36,7 @@ export function useBeraterAnfrage(daten: BeraterDaten): BeraterAnfrage {
   const [formularFehler, setFormularFehler] = useState<string | null>(null);
   const [abgebrochen, setAbgebrochen] = useState(false);
 
-  const anfordern = (wunsch: BeraterWunsch): void => {
+  const anfordern = (wunsch: BeraterWunsch, zugangscode?: string): void => {
     if (daten.isLaden || ki.isStreaming) return;
     setFormularFehler(null);
     if (!hatBeraterDaten(wunsch, daten.seen, daten.prognosen)) {
@@ -53,7 +55,7 @@ export function useBeraterAnfrage(daten: BeraterDaten): BeraterAnfrage {
     setAnfrage({ ...wunsch });
     setAnfrageNummer((nummer) => nummer + 1);
     setAbgebrochen(false);
-    void ki.sendeNachricht(prompt);
+    void ki.sendeNachricht(prompt, zugangscode);
   };
 
   const abbrechen = (): void => {
@@ -67,6 +69,7 @@ export function useBeraterAnfrage(daten: BeraterDaten): BeraterAnfrage {
     antwort: ki.nachrichten.filter((nachricht) => nachricht.role === 'assistant').at(-1)?.content ?? '',
     isStreaming: ki.isStreaming,
     kiFehler: ki.fehler,
+    zugangStatus: ki.zugangStatus,
     formularFehler,
     abgebrochen,
     anfordern,

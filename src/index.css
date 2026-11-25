@@ -1,9 +1,10 @@
 /*
  * index.css – Grundgestaltung
  *
- * Farben als Variablen, mit dunklem Farbschema. Responsive Design und Barrierefreiheit werden in ESA 3 ausgebaut.
+ * Basis ab 320 px. Größere Ansichten ab 48rem (Tablet) und 64rem (Desktop).
+ * Farben als Variablen, mit dunklem Farbschema.
  *
- * @project  FERNFH SED502 Frontend Development WS 2026/27 ESA 2: Seen im Klimawandel
+ * @project  FERNFH SED502 Frontend Development WS 2026/27 ESA 3: Seen im Klimawandel
  * @author   Peter Luckmann, Christoph Hauser
  */
 
@@ -13,9 +14,11 @@
   --bg: #ffffff;
   --flaeche: #f1f5f8;
   --rand: #d9e2ec;
+  --rand-bedienelement: #667583;
   --akzent: #0b5c7a;
+  --fehler: #b42318;
 
-  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  font: 1rem/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -28,7 +31,9 @@
     --bg: #12181d;
     --flaeche: #1c252c;
     --rand: #323f4b;
+    --rand-bedienelement: #8091a2;
     --akzent: #6cc4e4;
+    --fehler: #ff887f;
   }
 }
 
@@ -38,19 +43,31 @@
 
 body {
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 #root {
-  max-width: 1100px;
+  max-inline-size: 70rem;
   min-height: 100svh;
-  margin: 0 auto;
-  padding: 0 16px;
+  margin-inline: auto;
+  padding-inline: 1rem;
   display: flex;
   flex-direction: column;
 }
 
 main {
   flex: 1;
+  min-inline-size: 0;
+  hyphens: auto;
+}
+
+main h1 {
+  font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.25rem);
+  line-height: 1.2;
+}
+
+main p {
+  max-inline-size: 70ch;
 }
 
 a {
@@ -139,6 +156,7 @@ a {
 
 .filter fieldset {
   display: flex;
+  min-inline-size: 0;
   flex-wrap: wrap;
   align-items: end;
   gap: 16px;
@@ -162,7 +180,13 @@ a {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 10rem;
+  min-inline-size: min(100%, 10rem);
+  max-inline-size: 100%;
+}
+
+.filter select,
+.filter input[type='range'] {
+  max-inline-size: 100%;
 }
 
 .filter__feld > label {
@@ -209,7 +233,7 @@ select:disabled {
 /* Seenliste und Seekarte */
 .seenliste {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   gap: 16px;
   margin: 0 0 24px;
   padding: 0;
@@ -270,7 +294,7 @@ select:disabled {
 /* Kennzahlen der Auswahl als Kacheln */
 .kennzahlen {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: 16px;
   margin: 0 0 24px;
 }
@@ -327,7 +351,7 @@ select:disabled {
   gap: 8px 16px;
   margin-bottom: 12px;
   padding: 12px 16px;
-  border: 1px solid #b42318;
+  border: 1px solid var(--fehler);
   border-left-width: 6px;
   border-radius: 8px;
 }
@@ -351,6 +375,10 @@ select:disabled {
   margin-block: 16px;
 }
 
+.klimadiagramm__grafik .recharts-surface:focus-visible {
+  outline-offset: -3px;
+}
+
 .klimadiagramm .recharts-cartesian-axis-tick-value {
   fill: var(--text-leise);
   font-size: 0.75rem;
@@ -358,7 +386,7 @@ select:disabled {
 
 .klimadiagramm .recharts-cartesian-axis-line,
 .klimadiagramm .recharts-cartesian-axis-tick-line {
-  stroke: var(--rand);
+  stroke: var(--rand-bedienelement);
 }
 
 .klimadiagramm__hinweis {
@@ -491,10 +519,21 @@ select:disabled {
   color: var(--text-leise);
 }
 
+.kifreischaltung {
+  display: grid;
+  gap: 0.5rem;
+  max-inline-size: 24rem;
+  justify-items: start;
+}
+
+.kifreischaltung label {
+  font-weight: 600;
+}
+
 /* Startseite */
 .start-angebote {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   margin-block: 24px;
 }
@@ -551,7 +590,7 @@ select:disabled {
 
 .berater-form__raster {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
 
@@ -567,11 +606,12 @@ select:disabled {
 
 .berater-form input[type='text'],
 .berater-form textarea,
-.berater-form select {
+.berater-form select,
+.kifreischaltung input {
   min-width: 0;
   width: 100%;
   padding: 8px;
-  border: 1px solid var(--rand);
+  border: 1px solid var(--rand-bedienelement);
   border-radius: 4px;
   font: inherit;
   color: inherit;
@@ -582,8 +622,41 @@ select:disabled {
   resize: vertical;
 }
 
+.berater-form :is(input, textarea, select)[aria-invalid='true'],
+.kifreischaltung input[aria-invalid='true'] {
+  border-color: var(--fehler);
+}
+
+.berater__feldfehler {
+  margin: 0;
+  color: var(--fehler);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 .berater__hinweis {
   margin: 0;
   color: var(--text-leise);
   font-size: 0.875rem;
+}
+
+@media (min-width: 48rem) {
+  #root {
+    padding-inline: 1.5rem;
+  }
+
+  .start-angebote,
+  .berater-form__raster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  #root {
+    padding-inline: 2rem;
+  }
+
+  .start-angebote {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

@@ -46,14 +46,14 @@ function SeeDetailInhalt({ see }: SeeDetailInhaltProps): React.JSX.Element {
   const hatDaten = detail.see.temperatur !== null || kennzahlen.length > 0 || frosttage.length > 0;
   const antwort = ki.nachrichten.filter((nachricht) => nachricht.role === 'assistant').at(-1)?.content ?? '';
 
-  const handleEinschaetzungAnfordern = (): void => {
+  const handleEinschaetzungAnfordern = (zugangscode?: string): void => {
     if (datenLaden || !hatDaten || ki.isStreaming) return;
     ki.zuruecksetzen();
     setAngefragt(true);
     setAbgebrochen(false);
     setAnfrageNummer((nummer) => nummer + 1);
     // undefined: heute bleibt beim Standardwert, damit frosttage als letztes Argument übergeben werden kann
-    void ki.sendeNachricht(baueSeeEinschaetzung(detail.see, kennzahlen, fehler, undefined, frosttage));
+    void ki.sendeNachricht(baueSeeEinschaetzung(detail.see, kennzahlen, fehler, undefined, frosttage), zugangscode);
   };
 
   const handleAbbrechen = (): void => {
@@ -74,7 +74,7 @@ function SeeDetailInhalt({ see }: SeeDetailInhaltProps): React.JSX.Element {
         <p>Achtung: Zur tatsächlichen Eissituation und zu offiziellen Freigaben liegen keine Daten vor. {EIS_PFLICHTSATZ}</p>
         {datenLaden && <p>Die Datengrundlage wird noch geladen.</p>}
         {!datenLaden && !hatDaten && <p>Für eine Einschätzung fehlen derzeit Messwerte und Klimakennzahlen.</p>}
-        <button type="button" disabled={datenLaden || !hatDaten || ki.isStreaming} onClick={handleEinschaetzungAnfordern}>
+        <button type="button" disabled={datenLaden || !hatDaten || ki.isStreaming} onClick={() => handleEinschaetzungAnfordern()}>
           {angefragt ? 'Neue Einschätzung anfordern' : 'KI-Einschätzung anfordern'}
         </button>
         {angefragt && (
@@ -83,6 +83,7 @@ function SeeDetailInhalt({ see }: SeeDetailInhaltProps): React.JSX.Element {
             text={antwort}
             isStreaming={ki.isStreaming}
             fehler={ki.fehler}
+            zugangStatus={ki.zugangStatus}
             abgebrochen={abgebrochen}
             onAbbrechen={handleAbbrechen}
             onErneutVersuchen={handleEinschaetzungAnfordern}

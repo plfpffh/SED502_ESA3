@@ -24,17 +24,14 @@ export default function KiBerater(): React.JSX.Element {
   useSeitentitel('KI-Berater');
   const daten = useBeraterDaten();
   const ki = useBeraterAnfrage(daten);
-  const tage = prognoseTage();
   const [wunsch, setWunsch] = useState<BeraterWunsch>(() => ({
     aktivitaet: 'baden', datum: prognoseTage()[0], bundesland: 'alle', wohnort: '', zusaetzlicheAngaben: '',
   }));
   const hatDaten = hatBeraterDaten(wunsch, daten.seen, daten.prognosen);
-  const datumGueltig = tage.includes(wunsch.datum);
   // Baden braucht keine Kälteserien, nur Eissport wartet auf sie
   const datenLaden = daten.isLaden || (wunsch.aktivitaet === 'eissport' && daten.isKaelteserienLaden);
   const aktualisieren = !datenLaden && !ki.isStreaming ? daten.neuLaden : undefined;
   const hinweise = [
-    ...(!datumGueltig ? ['Bitte wähle einen aktuellen Ausflugstag.'] : []),
     ...(!datenLaden && !hatDaten ? ['Für diese Auswahl sind derzeit keine Messwerte oder Prognosen verfügbar.'] : []),
   ];
 
@@ -48,9 +45,8 @@ export default function KiBerater(): React.JSX.Element {
 
       <BeraterFormular
         wunsch={wunsch}
-        tage={tage}
         isGesperrt={ki.isStreaming}
-        kannAbsenden={!datenLaden && hatDaten && datumGueltig}
+        kannAbsenden={!datenLaden && hatDaten}
         hinweise={hinweise}
         fehler={ki.formularFehler}
         onAendern={setWunsch}
@@ -75,9 +71,10 @@ export default function KiBerater(): React.JSX.Element {
           text={ki.antwort}
           isStreaming={ki.isStreaming}
           fehler={ki.kiFehler}
+          zugangStatus={ki.zugangStatus}
           abgebrochen={ki.abgebrochen}
           onAbbrechen={ki.abbrechen}
-          onErneutVersuchen={() => ki.anfrage && ki.anfordern(ki.anfrage)}
+          onErneutVersuchen={(code) => ki.anfrage && ki.anfordern(ki.anfrage, code)}
         />
       )}
     </div>

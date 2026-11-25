@@ -13,3 +13,12 @@ export interface Nachricht {
   role: Rolle;
   content: string;
 }
+
+export type KiFehlerkennung = 'KONTINGENT_AUFGEBRAUCHT' | 'NUR_MIT_ZUGANGSCODE' | 'CODE_UNGUELTIG';
+
+export interface KiFehler {
+  meldung: string;
+  kennung: KiFehlerkennung | null;
+}
+
+export type KiZugangStatus = 'wird-geprueft' | 'akzeptiert' | null;

@@ -10,42 +10,70 @@
  */
 
 // mit Endung, weil auch die Tests (Node) diese Datei laden
-import type { Nachricht } from '../typen/ai.ts';
+import type { KiFehlerkennung, Nachricht } from '../typen/ai.ts';
 import type { ChatStream } from '../typen/schnittstellen.ts';
 import { HttpFehler } from './fetchJSON.ts';
+import { leseKiZugangscode, speichereKiZugangscode, verwerfeKiZugangscode } from './kiZugang.ts';
 
-/** Liest die Meldung { fehler } aus einer Fehlerantwort von /api/ki, sonst null. */
-async function meldungAusAntwort(antwort: Response): Promise<string | null> {
+export class KiHttpFehler extends HttpFehler {
+  readonly kennung: KiFehlerkennung | null;
+
+  constructor(status: number, meldung: string, kennung: KiFehlerkennung | null) {
+    super(status, meldung);
+    this.kennung = kennung;
+  }
+}
+
+function zugangskennung(status: number, kennung: unknown): KiFehlerkennung | null {
+  if (status === 429 && kennung === 'KONTINGENT_AUFGEBRAUCHT') return kennung;
+  if (status === 503 && kennung === 'NUR_MIT_ZUGANGSCODE') return kennung;
+  if (status === 403 && kennung === 'CODE_UNGUELTIG') return kennung;
+  return null;
+}
+
+async function fehlerAusAntwort(antwort: Response): Promise<KiHttpFehler> {
   try {
     const body: unknown = await antwort.json();
     if (body !== null && typeof body === 'object' && 'fehler' in body && typeof body.fehler === 'string') {
-      return body.fehler;
+      const kennung = zugangskennung(antwort.status, 'kennung' in body ? body.kennung : null);
+      return new KiHttpFehler(antwort.status, body.fehler, kennung);
     }
   } catch {
     // kein JSON
   }
-  return null;
+  return new KiHttpFehler(antwort.status, `HTTP Fehler ${antwort.status}`, null);
 }
 
 /**
  * Sendet den Verlauf an /api/ki und gibt jeden empfangenen Textteil an onChunk weiter.
  * Ein Abbruch über signal (Button „Abbrechen“) gilt nicht als Fehler, sondern beendet die Antwort mit onFertig.
  */
-export const chatStream: ChatStream = async (nachrichten, onChunk, onFertig, onFehler, signal) => {
+export const chatStream: ChatStream = async (nachrichten, onChunk, onFertig, onFehler, signal, freischaltung) => {
   try {
+    const code = freischaltung?.code ?? leseKiZugangscode();
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+    if (code) headers.set('X-KI-Zugangscode', code);
     const antwort = await fetch('/api/ki', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
+      redirect: 'error',
       // an die API gehen nur role und content, nicht die id aus dem lokalen Verlauf
       body: JSON.stringify({ nachrichten: nachrichten.map(({ role, content }) => ({ role, content })) }),
       signal,
     });
     if (!antwort.ok) {
-      throw new HttpFehler(antwort.status, (await meldungAusAntwort(antwort)) ?? `HTTP Fehler ${antwort.status}`);
+      const fehler = await fehlerAusAntwort(antwort);
+      if (code && fehler.kennung === 'CODE_UNGUELTIG') verwerfeKiZugangscode(code);
+      throw fehler;
     }
 
     const reader = antwort.body?.getReader();
     if (!reader) throw new Error('Kein Stream verfügbar.');
+
+    if (freischaltung) {
+      speichereKiZugangscode(freischaltung.code);
+      freischaltung.onAkzeptiert();
+    }
 
     const decoder = new TextDecoder();
     while (true) {
