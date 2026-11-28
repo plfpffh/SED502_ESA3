@@ -77,6 +77,27 @@ Die Diagrammdatei wird auf der Detailseite bereits separat geladen, sobald die K
 
 Die Ausgangsmessung hält diese Befunde fest. Die nächste Messreihe ergänzt die tatsächlich umgesetzten Maßnahmen und die Größen nach der Optimierung.
 
+### Umgesetzte Optimierungen am 28.11.2026
+
+- `Klimatrend` beobachtet den 320 px hohen Grafikbereich mit `IntersectionObserver`. Erst wenn er sichtbar ist und Frosttage vorliegen, wird die Grafik per `React.lazy` geladen. Nach der ersten Sichtbarkeit wird der Observer getrennt. Ohne Browserunterstützung wird die Grafik bei vorhandenen Daten direkt geladen.
+- Bildunterschrift, Erklärung, Quellenlink und Datentabelle liegen jetzt im bereits geladenen `Klimatrend`. Die Tabelle ist unabhängig vom Grafikchunk bedienbar. Der Grafikbereich bleibt auch während des Datenabrufs und des Nachladens der Grafik 320 px hoch.
+- Der Hauptinhalt hat mindestens eine Bildschirmhöhe (`100svh`). Dadurch liegt die Fußzeile während des Ladens einer Seite bereits unterhalb des ersten Bildschirms. Bei kurzen Seiten entsteht entsprechend mehr Platz vor der Fußzeile.
+
+Die Klimadaten werden weiterhin beim Aufruf der Detailseite abgerufen. Die Verzögerung betrifft das Laden und Rendern der Diagrammgrafik.
+
+| Bundle | Vorher (kB) | Nachher (kB) | Gzip vorher / nachher (kB) |
+| --- | ---: | ---: | ---: |
+| Haupt-JavaScript | 270,75 | 270,75 | 86,19 / 86,19 |
+| Diagrammgrafik | 353,62 | 352,03 | 102,88 / 102,29 |
+| See-Detailseite | 8,01 | 10,11 | 3,20 / 3,89 |
+| Stylesheet | 8,03 | 8,05 | 2,37 / 2,38 |
+
+Die größere Detailseite enthält nun den Rahmen und die Tabelle. Bei einem zunächst außerhalb des Bildschirms liegenden Diagramm entfällt bis zum Scrollen der Abruf des rund 102 kB großen gzip-komprimierten Grafikchunks.
+
+**Lokale Prüfung mit dem Produktions-Build und nachgebildeten API-Antworten.** Bei 320 px wurde vor dem Scrollen kein Grafikchunk angefordert. Nach dem Scrollen wurde die Grafik geladen. Bei 320 px und 1280 px blieb die Position der nachfolgenden KI-Sektion beim Eintreffen der Klimadaten stabil. Die Grafik war mit Pfeiltasten bedienbar und die Tabelle ließ sich per Enter öffnen und per Tab fokussieren. Ohne `IntersectionObserver` sowie nach einem fehlgeschlagenen Abruf mit anschließendem Wiederholen wurde die Grafik ebenfalls angezeigt. Es gab keine horizontalen Scrollbalken oder JavaScript-Fehler.
+
+`npm run build`, `npm run lint` und alle 196 vorhandenen Tests sind erfolgreich. Die oben dokumentierten Lighthouse-Scores gehören weiterhin zur Ausgangsmessung auf Produktion. Eine erneute Live-Messung folgt nach dem Deployment dieser Änderungen.
+
 ## Screenshots
 
 Die Screenshots zeigen jeweils Lauf 2 der Attersee-Detailseite mit den beiden Kategorie-Scores. Beide Läufe haben den jeweiligen Performance-Median. LCP, TBT und CLS in der Mediantabelle können aus anderen Läufen stammen.

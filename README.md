@@ -192,7 +192,7 @@ Open-Meteo rechnet lange Zeiträume und mehrere Variablen als mehrere Anfragen a
 ### Qualitätssicherung und vorgezogene Themen aus ESA 3
 
 - **CI:** Bei jedem Push auf `main` und jedem Pull Request prüft GitHub Actions ([`ci.yml`](.github/workflows/ci.yml)) den Code mit `npm ci`, `npm run lint`, `npm test` und `npm run build` (inklusive TypeScript-Prüfung). CI/CD ist Thema von Kompendium Modul 07 (ESA 3). Wir haben es vorgezogen, damit jeder Pull Request automatisch geprüft wird.
-- **Code Splitting:** `React.lazy` lädt das Diagramm (Recharts, rund 350 kB) erst auf der Detailseite. Auch das ist Thema von Modul 07. Ohne diese Aufteilung wäre das Hauptpaket über 500 kB groß, und der Build würde eine Größenwarnung ausgeben.
+- **Code Splitting:** `React.lazy` lädt die Diagrammgrafik mit Recharts erst auf der Detailseite, wenn ihr Bereich sichtbar wird und Klimadaten vorliegen. Erklärung und Datentabelle stehen unabhängig davon bereit. Die Grafik behält während des Ladens ihre Höhe von 320 px.
 - **Node.js ab 22.18** ist nötig, weil die Tests TypeScript-Dateien direkt mit `node --test` ausführen (in der CI: Node 24).
 
 ### Ausblick auf ESA 3
