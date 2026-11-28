@@ -57,6 +57,15 @@ Das Layout ist ab 320 px ausgelegt und verwendet gemeinsame Breakpoints bei 48 u
 Der Accessibility-Zwischenstand vom 28.11.2026 enthält 60 axe-Prüfungen auf sieben Seiten, jeweils bei 320 und 1280 px sowie in beiden Farbschemata. Dabei wurden keine bestätigten Verstöße festgestellt. 
 
 
+## Performance
+
+Mit `React.lazy` werden die Seiten erst geladen, sobald sie aufgerufen werden. Die Recharts-Diagrammgrafik lädt erst, wenn ihr Bereich sichtbar ist und Klimadaten verfügbar sind. Erklärung und Datentabelle stehen schon vorher bereit.
+
+Während des Ladens bleiben im Grafikbereich 320 px Höhe reserviert. Der Hauptinhalt nimmt mindestens eine Bildschirmhöhe ein. Dadurch springt die Fußzeile beim Nachladen einer Seite weniger.
+
+Die Bundle-Größen vor und nach der Optimierung sowie die lokalen Prüfungen sind in [doc/lighthouse.md](doc/lighthouse.md#performance) dokumentiert. Nach dem Deployment der Optimierungen folgt eine weitere Messung auf der Live-URL.
+
+
 ## Lighthouse-Ausgangsmessung
 
 Die Produktions-App wurde am 28.11.2026 auf vier Seiten jeweils dreimal mobil und am Desktop gemessen. Die Performance-Mediane liegen zwischen 93 und 99 auf Mobilgeräten und zwischen 75 und 100 am Desktop. Accessibility erreicht jeweils 100 Punkte. Messbedingungen, Einzelwerte und geplante Optimierungen stehen in [doc/lighthouse.md](doc/lighthouse.md).
