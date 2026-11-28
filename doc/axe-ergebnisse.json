@@ -1,0 +1,1193 @@
+{
+  "date": "2026-11-28",
+  "sourceCommit": "02781c9",
+  "environment": "Lokaler Produktions-Build in Chrome 158, nachgebildete APIs",
+  "tool": "axe-core",
+  "version": "4.14.0",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa",
+    "best-practice"
+  ],
+  "runs": [
+    {
+      "route": "/",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Eissport-Filter",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 45,
+      "inapplicableRules": 46,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Messstellen aufgeklappt",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 10,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"98.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"161.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Frosttage-Tabelle offen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 118,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"98.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"161.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 50,
+      "inapplicableRules": 41,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Detail KI-Freischaltung",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 100,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"98.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"161.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 54,
+      "inapplicableRules": 37,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Wohnort ungültig",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Zugangscode leer",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "light",
+      "state": "Zugangscode falsch",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "light",
+      "state": "KI-Antwort mit langem Text",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/impressum",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/datenschutz",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 32,
+      "inapplicableRules": 59,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/unbekannt",
+      "viewport": 320,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Eissport-Filter",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 45,
+      "inapplicableRules": 46,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Messstellen aufgeklappt",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 10,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"98.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"161.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Frosttage-Tabelle offen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 118,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"98.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"161.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 50,
+      "inapplicableRules": 41,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Detail KI-Freischaltung",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 100,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"98.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"161.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 54,
+      "inapplicableRules": 37,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Wohnort ungültig",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Zugangscode leer",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "Zugangscode falsch",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "KI-Antwort mit langem Text",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/impressum",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/datenschutz",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 32,
+      "inapplicableRules": 59,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/unbekannt",
+      "viewport": 320,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Eissport-Filter",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 45,
+      "inapplicableRules": 46,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Messstellen aufgeklappt",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 22,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"102.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"169.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Frosttage-Tabelle offen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 140,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"102.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"169.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 50,
+      "inapplicableRules": 41,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Detail KI-Freischaltung",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 124,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"102.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"169.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 54,
+      "inapplicableRules": 37,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Wohnort ungültig",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Zugangscode leer",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "Zugangscode falsch",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "KI-Antwort mit langem Text",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/impressum",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/datenschutz",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 32,
+      "inapplicableRules": 59,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/unbekannt",
+      "viewport": 1280,
+      "theme": "light",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Eissport-Filter",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 45,
+      "inapplicableRules": 46,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Messstellen aufgeklappt",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 41,
+      "inapplicableRules": 50,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 22,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"102.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"169.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Frosttage-Tabelle offen",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 140,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"102.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"169.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 50,
+      "inapplicableRules": 41,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/seen/attersee",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Detail KI-Freischaltung",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "affectedNodes": 124,
+          "exampleSelectors": [
+            [
+              ".recharts-cartesian-axis-tick-label.recharts-layer:nth-child(1) > .recharts-cartesian-axis-tick-value[y=\"276\"][text-anchor=\"middle\"] > tspan[dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"102.93333333333334\"][dy=\"0.71em\"]"
+            ],
+            [
+              "tspan[x=\"169.86666666666667\"][dy=\"0.71em\"]"
+            ]
+          ],
+          "reason": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node",
+          "review": "Die gerenderten SVG-Farben wurden separat nachgerechnet. Kontrast hell 6,46:1, dunkel 7,15:1."
+        }
+      ],
+      "passedRules": 54,
+      "inapplicableRules": 37,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Wohnort ungültig",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 40,
+      "inapplicableRules": 51,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Zugangscode leer",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "Zugangscode falsch",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/berater",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "KI-Antwort mit langem Text",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 44,
+      "inapplicableRules": 47,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/impressum",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/datenschutz",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 32,
+      "inapplicableRules": 59,
+      "horizontalOverflow": false
+    },
+    {
+      "route": "/unbekannt",
+      "viewport": 1280,
+      "theme": "dark",
+      "state": "geladen",
+      "violations": [],
+      "incomplete": [],
+      "passedRules": 31,
+      "inapplicableRules": 60,
+      "horizontalOverflow": false
+    }
+  ],
+  "keyboardChecks": [
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/",
+      "skipLink": true,
+      "tabStops": 3,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/seen",
+      "skipLink": true,
+      "tabStops": 72,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/seen/attersee",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/berater",
+      "skipLink": true,
+      "tabStops": 18,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/impressum",
+      "skipLink": true,
+      "tabStops": 6,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/datenschutz",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/unbekannt",
+      "skipLink": true,
+      "tabStops": 8,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/",
+      "skipLink": true,
+      "tabStops": 3,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/seen",
+      "skipLink": true,
+      "tabStops": 72,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/seen/attersee",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/berater",
+      "skipLink": true,
+      "tabStops": 18,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/impressum",
+      "skipLink": true,
+      "tabStops": 6,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/datenschutz",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/unbekannt",
+      "skipLink": true,
+      "tabStops": 8,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/",
+      "skipLink": true,
+      "tabStops": 3,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/seen",
+      "skipLink": true,
+      "tabStops": 72,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/seen/attersee",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/berater",
+      "skipLink": true,
+      "tabStops": 18,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/impressum",
+      "skipLink": true,
+      "tabStops": 6,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/datenschutz",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/unbekannt",
+      "skipLink": true,
+      "tabStops": 8,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/",
+      "skipLink": true,
+      "tabStops": 3,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/seen",
+      "skipLink": true,
+      "tabStops": 72,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/seen/attersee",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/berater",
+      "skipLink": true,
+      "tabStops": 18,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/impressum",
+      "skipLink": true,
+      "tabStops": 6,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/datenschutz",
+      "skipLink": true,
+      "tabStops": 16,
+      "focusProblems": []
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/unbekannt",
+      "skipLink": true,
+      "tabStops": 8,
+      "focusProblems": []
+    }
+  ],
+  "svgContrastChecks": [
+    {
+      "viewport": 320,
+      "theme": "light",
+      "route": "/seen/attersee",
+      "contrast": [
+        {
+          "foreground": "rgb(82, 96, 109)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 6.456092605221279
+        }
+      ]
+    },
+    {
+      "viewport": 320,
+      "theme": "dark",
+      "route": "/seen/attersee",
+      "contrast": [
+        {
+          "foreground": "rgb(154, 165, 177)",
+          "background": "rgb(18, 24, 29)",
+          "ratio": 7.146594656855748
+        }
+      ]
+    },
+    {
+      "viewport": 1280,
+      "theme": "light",
+      "route": "/seen/attersee",
+      "contrast": [
+        {
+          "foreground": "rgb(82, 96, 109)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 6.456092605221279
+        }
+      ]
+    },
+    {
+      "viewport": 1280,
+      "theme": "dark",
+      "route": "/seen/attersee",
+      "contrast": [
+        {
+          "foreground": "rgb(154, 165, 177)",
+          "background": "rgb(18, 24, 29)",
+          "ratio": 7.146594656855748
+        }
+      ]
+    }
+  ]
+}

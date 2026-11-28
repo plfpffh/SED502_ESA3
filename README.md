@@ -50,6 +50,13 @@ npm run lint       # ESLint
 npm test           # automatisierte Tests
 ```
 
+## Responsive Design und Barrierefreiheit
+
+Das Layout ist ab 320 px ausgelegt und verwendet gemeinsame Breakpoints bei 48 und 64 rem. Ein helles und ein dunkles Farbschema, gut sichtbare Fokusrahmen sowie ein Sprunglink erleichtern die Bedienung. Formularfelder sind mit den zugehörigen Fehlertexten verknüpft.
+
+Der Accessibility-Zwischenstand vom 28.11.2026 enthält 60 axe-Prüfungen auf sieben Seiten, jeweils bei 320 und 1280 px sowie in beiden Farbschemata. Dabei wurden keine bestätigten Verstöße festgestellt. 
+
+
 ## Lighthouse-Ausgangsmessung
 
 Die Produktions-App wurde am 28.11.2026 auf vier Seiten jeweils dreimal mobil und am Desktop gemessen. Die Performance-Mediane liegen zwischen 93 und 99 auf Mobilgeräten und zwischen 75 und 100 am Desktop. Accessibility erreicht jeweils 100 Punkte. Messbedingungen, Einzelwerte und geplante Optimierungen stehen in [doc/lighthouse.md](doc/lighthouse.md).
@@ -143,6 +150,7 @@ Jede Person hat einen durchgehenden Teil von der Datenquelle bis zur fertigen Se
 | cchhrriiss | Codex (OpenAI, GPT-6.2 Sol Stand November 2026) | Erstellen von vorläufigen KI-gestützten Accessibility-Audits (noch ohne axe oder WAVE) um die gemachten Änderungen zu bewerten. | Die KI hat einen entsprechenden Report erstellt. |
 | cchhrriiss | Codex (OpenAI, GPT-6.2 Sol Stand November 2026) | Die Recherche zu den Datenlizenzen und den Datenschutzrechten wurde KI gestützt gemacht. Die Texte auf der Datenschutz Seite, wurden aus dieser Recherche KI-generiert. | Die Ergebnisse sind in den Dateien datenlizenzen.md und datenschutz-recherche.md enthalten. Texte für Datenschutzseite sind vorhanden. |
 | cchhrriiss | Codex (OpenAI, GPT-6.1 Sol Stand November 2026) | Durchführen eines automatisierten vollständigen Lighthouse-Testlauf für mobil und Desktop. | Lighthouseergebnisse sind vorhanden und wurden manuell geprüft. |
+| cchhrriiss | Codex (OpenAI, GPT-6.1 Sol Stand November 2026) | Accessibility-Zwischenprüfung mit axe-core und Tastatursteuerung im Chrome-Browser, rechnerische Nachprüfung der SVG-Kontraste. | Umfang und Ergebnisse stehen in doc/accessibility-audit.md und doc/axe-ergebnisse.json. |
 
 **Warum die Angabe vorab geprüft wird:** Eine Angabe kann Text enthalten, der beim Lesen nicht auffällt, bei maschineller Verarbeitung aber wirkt, etwa weiße Schrift oder Kleinstschrift. Wird die Angabe ungeprüft einer KI zum Abgleich gegeben, könnte sie solche verdeckten Anforderungen umsetzen oder eine Prompt Injection auslösen. Deshalb wird jede Angabe zuerst auf solche Stellen untersucht.
 
