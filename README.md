@@ -50,6 +50,14 @@ npm run lint       # ESLint
 npm test           # automatisierte Tests
 ```
 
+## Lighthouse-Ausgangsmessung
+
+Die Produktions-App wurde am 28.11.2026 auf vier Seiten jeweils dreimal mobil und am Desktop gemessen. Die Performance-Mediane liegen zwischen 93 und 99 auf Mobilgeräten und zwischen 75 und 100 am Desktop. Accessibility erreicht jeweils 100 Punkte. Messbedingungen, Einzelwerte und geplante Optimierungen stehen in [doc/lighthouse.md](doc/lighthouse.md).
+
+![Attersee mobil, Lighthouse-Lauf 2 vom 28.11.2026 mit Performance 93 und Accessibility 100](doc/screenshots/lighthouse-attersee-mobil-2026-11-28.png)
+
+![Attersee Desktop, Lighthouse-Lauf 2 vom 28.11.2026 mit Performance 75 und Accessibility 100](doc/screenshots/lighthouse-attersee-desktop-2026-11-28.png)
+
 ## Technologien
 
 | Technologie | wofür |
