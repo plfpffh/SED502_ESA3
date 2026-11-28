@@ -50,6 +50,30 @@ npm run lint       # ESLint
 npm test           # automatisierte Tests
 ```
 
+## Responsive Design und Barrierefreiheit
+
+Das Layout ist ab 320 px ausgelegt und verwendet gemeinsame Breakpoints bei 48 und 64 rem. Ein helles und ein dunkles Farbschema, gut sichtbare Fokusrahmen sowie ein Sprunglink erleichtern die Bedienung. Formularfelder sind mit den zugehörigen Fehlertexten verknüpft.
+
+Der Accessibility-Zwischenstand vom 28.11.2026 enthält 60 axe-Prüfungen auf sieben Seiten, jeweils bei 320 und 1280 px sowie in beiden Farbschemata. Dabei wurden keine bestätigten Verstöße festgestellt. 
+
+
+## Performance
+
+Mit `React.lazy` werden die Seiten erst geladen, sobald sie aufgerufen werden. Die Recharts-Diagrammgrafik lädt erst, wenn ihr Bereich sichtbar ist und Klimadaten verfügbar sind. Erklärung und Datentabelle stehen schon vorher bereit.
+
+Während des Ladens bleiben im Grafikbereich 320 px Höhe reserviert. Der Hauptinhalt nimmt mindestens eine Bildschirmhöhe ein. Dadurch springt die Fußzeile beim Nachladen einer Seite weniger.
+
+Die Bundle-Größen vor und nach der Optimierung sowie die lokalen Prüfungen sind in [doc/lighthouse.md](doc/lighthouse.md#performance) dokumentiert. Nach dem Deployment der Optimierungen folgt eine weitere Messung auf der Live-URL.
+
+
+## Lighthouse-Ausgangsmessung
+
+Die Produktions-App wurde am 28.11.2026 auf vier Seiten jeweils dreimal mobil und am Desktop gemessen. Die Performance-Mediane liegen zwischen 93 und 99 auf Mobilgeräten und zwischen 75 und 100 am Desktop. Accessibility erreicht jeweils 100 Punkte. Messbedingungen, Einzelwerte und geplante Optimierungen stehen in [doc/lighthouse.md](doc/lighthouse.md).
+
+![Attersee mobil, Lighthouse-Lauf 2 vom 28.11.2026 mit Performance 93 und Accessibility 100](doc/screenshots/lighthouse-attersee-mobil-2026-11-28.png)
+
+![Attersee Desktop, Lighthouse-Lauf 2 vom 28.11.2026 mit Performance 75 und Accessibility 100](doc/screenshots/lighthouse-attersee-desktop-2026-11-28.png)
+
 ## Technologien
 
 | Technologie | wofür |
@@ -134,6 +158,8 @@ Jede Person hat einen durchgehenden Teil von der Datenquelle bis zur fertigen Se
 | cchhrriiss | Codex (OpenAI, GPT-6.1 Sol Stand Oktober/November 2026 und GPT-6.2 Sol Stand November 2026) | Pair Programming (Review, Refactoring, Ideenaustausch, Beispielcode), Beantwortung von technischen Fragen, Fehlersuche, Initiale Erstellung für Tests, Teilweises Updaten vom PLANUNG.md und README.md, Erstellung der Prompts der KI-Einschätzung und des KI-Beraters | Alle generierten Inhalte wurden kritisch geprüft. Generierte Inhalte wurden anschließend manuell überarbeitet und/oder erweitert. |
 | cchhrriiss | Codex (OpenAI, GPT-6.2 Sol Stand November 2026) | Erstellen von vorläufigen KI-gestützten Accessibility-Audits (noch ohne axe oder WAVE) um die gemachten Änderungen zu bewerten. | Die KI hat einen entsprechenden Report erstellt. |
 | cchhrriiss | Codex (OpenAI, GPT-6.2 Sol Stand November 2026) | Die Recherche zu den Datenlizenzen und den Datenschutzrechten wurde KI gestützt gemacht. Die Texte auf der Datenschutz Seite, wurden aus dieser Recherche KI-generiert. | Die Ergebnisse sind in den Dateien datenlizenzen.md und datenschutz-recherche.md enthalten. Texte für Datenschutzseite sind vorhanden. |
+| cchhrriiss | Codex (OpenAI, GPT-6.1 Sol Stand November 2026) | Durchführen eines automatisierten vollständigen Lighthouse-Testlauf für mobil und Desktop. | Lighthouseergebnisse sind vorhanden und wurden manuell geprüft. |
+| cchhrriiss | Codex (OpenAI, GPT-6.1 Sol Stand November 2026) | Accessibility-Zwischenprüfung mit axe-core und Tastatursteuerung im Chrome-Browser, rechnerische Nachprüfung der SVG-Kontraste. | Umfang und Ergebnisse stehen in doc/accessibility-audit.md und doc/axe-ergebnisse.json. |
 
 **Warum die Angabe vorab geprüft wird:** Eine Angabe kann Text enthalten, der beim Lesen nicht auffällt, bei maschineller Verarbeitung aber wirkt, etwa weiße Schrift oder Kleinstschrift. Wird die Angabe ungeprüft einer KI zum Abgleich gegeben, könnte sie solche verdeckten Anforderungen umsetzen oder eine Prompt Injection auslösen. Deshalb wird jede Angabe zuerst auf solche Stellen untersucht.
 
@@ -183,7 +209,7 @@ Open-Meteo rechnet lange Zeiträume und mehrere Variablen als mehrere Anfragen a
 ### Qualitätssicherung und vorgezogene Themen aus ESA 3
 
 - **CI:** Bei jedem Push auf `main` und jedem Pull Request prüft GitHub Actions ([`ci.yml`](.github/workflows/ci.yml)) den Code mit `npm ci`, `npm run lint`, `npm test` und `npm run build` (inklusive TypeScript-Prüfung). CI/CD ist Thema von Kompendium Modul 07 (ESA 3). Wir haben es vorgezogen, damit jeder Pull Request automatisch geprüft wird.
-- **Code Splitting:** `React.lazy` lädt das Diagramm (Recharts, rund 350 kB) erst auf der Detailseite. Auch das ist Thema von Modul 07. Ohne diese Aufteilung wäre das Hauptpaket über 500 kB groß, und der Build würde eine Größenwarnung ausgeben.
+- **Code Splitting:** `React.lazy` lädt die Diagrammgrafik mit Recharts erst auf der Detailseite, wenn ihr Bereich sichtbar wird und Klimadaten vorliegen. Erklärung und Datentabelle stehen unabhängig davon bereit. Die Grafik behält während des Ladens ihre Höhe von 320 px.
 - **Node.js ab 22.18** ist nötig, weil die Tests TypeScript-Dateien direkt mit `node --test` ausführen (in der CI: Node 24).
 
 ### Ausblick auf ESA 3
